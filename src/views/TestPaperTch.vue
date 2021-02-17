@@ -1,0 +1,607 @@
+<template>
+  <div class="createTest testPaper" @click.self="edit(-1,-1)">
+    <div class="w">
+      <div class="header"></div>
+      <!-- 试卷信息 -->
+      <div class="title">
+        <el-input v-model="testData.name" class="testName" placeholder="请输入内容"></el-input>
+        <ul>
+          <li class="test-info">出卷者: {{ userData.name }}</li>
+          <li class="test-info">
+            答题时间:
+            <el-input-number v-model="testData.time" controls-position="right" :step="10" size="mini" :min="1"></el-input-number>
+            分钟
+          </li>
+          <li class="test-info">题目数量: 共 {{ topicNavIndex_mixin(4,sortedTopics[4].topic_content.length-1) }} 道</li>
+          <li class="test-info">总分: {{ total_score }} 分</li>
+          <li class="test-info">
+            及格分数:
+            <el-input-number v-model="testData.pass_mark" controls-position="right" :step="1" size="mini" :min="0" :max="total_score"></el-input-number>
+            分
+          </li>
+          <!-- <li class="test-info">所属班级: {{ testData.classes_name }}</li> -->
+          <li style="clear:both;"></li>
+        </ul>
+        <ul>
+          <li class="test-info">重复考试的次数:
+            <el-input-number v-model="testData.repeat_test" controls-position="right" :step="1" size="mini" :min="1"></el-input-number>
+          </li>
+          <li class="test-info">是否允许复制文本:
+            <el-switch v-model="testData.permit_copy" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+          </li>
+          <li class="test-info">是否打乱题目顺序:
+            <el-switch v-model="testData.disrupt_order" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+          </li>
+          <li class="test-info">是否自动评分:
+            <el-switch v-model="testData.auto_mack" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+            <el-tooltip class="item" effect="light" content="取消自动评分系统依然会自动批改,但会先显示分数为0分,等待教师审批确认" placement="bottom-start">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </li>
+          <li>
+            <el-button size="mini" type="primary" @click="submit()">保存试卷</el-button>
+          </li>
+          <li style="clear:both;"></li>
+        </ul>
+
+      </div>
+
+      <div class="test-content" @click.self="edit(-1,-1)">
+        <div class="topics">
+          <!-- 所有题目 -->
+          <div class="topic" v-for="(s_topics, index) in sortedTopics" :key="index">
+            <!-- 按类型分类好的题目 -->
+            <div class="topicsType" v-if="s_topics.topic_content.length != 0">
+              <div class="bigQuestionName">
+                <h4> {{bigQuestionName_mixin(s_topics.type,index)}} </h4><!-- 题目类型名称 -->
+                <div class="allScore">
+                  <button :class="s_topics.showAllScore? 'active':''" @click="s_topics.showAllScore = !s_topics.showAllScore">统一设置题目分数</button>
+                  <el-input v-if="s_topics.showAllScore" @change="setAllScore($event,s_topics.type)" v-model="s_topics.score" placeholder="请输入分数"></el-input>
+                </div>
+              </div>
+
+              <div v-for="(t, tIndex) in s_topics.topic_content" :key="tIndex" @click="edit(s_topics.type,tIndex)">
+                <div class="topic-content" :class="isEdit(s_topics.type,tIndex)?'isEdit':''">
+                  <!-- 题目 -->
+                  <div class="question">
+                    <strong class="question_nunber">{{ topicNavIndex_mixin(s_topics.type,tIndex) }}、</strong>
+                    <span v-if="isEdit(s_topics.type,tIndex)">
+                      <el-input v-model="t.question" type="textarea" autosize></el-input>
+                    </span>
+                    <span v-else>{{ t.question }}</span>
+                  </div>
+
+                  <!-- 单项选择题 -->
+                  <div class="userAnswer" v-if="s_topics.type==0">
+                    <div class="radios">
+                      <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.correct_answer" :label="item">
+                        <span class="topicNavIndex">{{String.fromCharCode(65+index)}}、</span>
+                        <span v-if="editInedx.type==0&&editInedx.index==tIndex">
+                          <el-input v-model="t.choice[index]" type="textarea" autosize></el-input>
+                          <el-button class="delRadios" size="mini" type="danger" v-if="t.choice.length>2" @click="delRadios(0,tIndex,index)">
+                            <i class="el-icon-close"></i>
+                          </el-button>
+                        </span>
+                        <span v-else>{{item}}</span>
+                      </el-radio>
+                    </div>
+                    <el-button class="addRadios" size="mini" icon="el-icon-plus" @click="addRadios(s_topics.type,tIndex)">添加选项</el-button>
+                  </div>
+
+                  <!-- 多项选择题 -->
+                  <div class="userAnswer" v-if="s_topics.type==1">
+                    <div class="checkbox">
+                      <el-checkbox-group v-model="t.correct_answer">
+                        <el-checkbox :label="item" v-for="(item, index) in t.choice" :key="index">
+                          <span class="topicNavIndex">{{String.fromCharCode(65+index)}}、</span>
+                          <span v-if="editInedx.type==1&&editInedx.index==tIndex">
+                            <el-input v-model="t.choice[index]" type="textarea" autosize></el-input>
+                            <el-button class="delRadios" size="mini" type="danger" v-if="t.choice.length>2" @click="delRadios(1,tIndex,index)">
+                              <i class="el-icon-close"></i>
+                            </el-button>
+                          </span>
+                          <span v-else>{{item}}</span>
+                        </el-checkbox>
+                      </el-checkbox-group>
+                    </div>
+                    <el-button class="addRadios" size="mini" icon="el-icon-plus" @click="addRadios(s_topics.type,tIndex)">添加选项</el-button>
+                  </div>
+
+                  <!-- 判断题 -->
+                  <div class="userAnswer" v-if="s_topics.type==2">
+                    <div class="TrueOrFalse">
+                      <el-radio v-model="t.correct_answer" label="true">正确</el-radio>
+                      <el-radio v-model="t.correct_answer" label="false">错误</el-radio>
+                    </div>
+                  </div>
+
+                  <!-- 填空题 -->
+                  <div class="userAnswer" v-if="s_topics.type==3">
+                    <el-button size="mini" @click="addFillSymbol(tIndex)">插入填空符</el-button>
+                    <span style="font-size:12px;">(三个下划线为一个填空符)</span>
+
+                    <div class="fillInBlank">
+                      <div v-for="(q, index) in fillSymbolStr(t.question)" :key="index">
+                        <el-input type="textarea" autosize placeholder="请回答" v-if="index!=fillSymbolStr(t.question).length-1" v-model="t.correct_answer[index]">
+                        </el-input>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 简答题 -->
+                  <div class="userAnswer" v-if="s_topics.type==4">
+                    <div class="text">
+                      <strong>&nbsp;&nbsp;关键字</strong>
+                      <div v-for="(q, index) in t.correct_answer" :key="index">
+                        <el-input type="textarea" autosize placeholder="请输入关键字" v-model="t.correct_answer[index]"> </el-input>
+                      </div>
+                      <el-button class="addRadios" size="mini" icon="el-icon-plus" @click="addKeyWord(tIndex)">添加关键字</el-button>
+                      {{t.correct_answer}}
+                    </div>
+                  </div>
+
+                  <!-- 正确答案 -->
+                  <p class="correct_answer" v-if="s_topics.type!=4">
+                    <strong>正确答案: </strong>
+                    {{ t.correct_answer }}
+                  </p>
+                  <div class="difficulty fl">
+                    <strong>难度: </strong>
+                    <span v-if="isEdit(s_topics.type,tIndex)">
+                      <el-select v-model="t.difficulty" placeholder="请选择" size="mini">
+                        <el-option v-for="item in topicDifficultyOptions" :key="item" :label="item" :value="item">
+                        </el-option>
+                      </el-select>
+                    </span>
+                    <span v-else>{{t.difficulty}}</span>
+                  </div>
+                  <div class="topicScore fr">
+                    <strong>分值: </strong>
+                    <span v-if="isEdit(s_topics.type,tIndex)">
+                      <el-input size="mini" v-model="t.score"></el-input>
+                    </span>
+                    <span v-else>{{t.score}}</span>
+                    (分)
+                  </div>
+                  <div class="analysis">
+                    <strong>题目解析: </strong>
+                    <span v-if="isEdit(s_topics.type,tIndex)">
+                      <el-input v-model="t.analysis" type="textarea" autosize></el-input>
+                    </span>
+                    <span v-else>{{t.analysis}}</span>
+                  </div>
+
+                </div>
+                <el-divider></el-divider>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 题目导航 -->
+        <div class="topic-nav" :class="isFixed ? 'isFixed' : ''" :style="topic_nav_style">
+          <!-- 工具 -->
+          <div class="tool">
+            <transition name="el-zoom-in-top">
+              <div v-show="!isEdit(-1,-1)">
+                <el-button icon="el-icon-top" title="上移" @click="moveTopic(-1)"></el-button>
+                <el-button icon="el-icon-bottom" title="下移" @click="moveTopic(1)"></el-button>
+
+                <transition name="el-zoom-in-center">
+                  <div v-show="true" style="display:inline-block;margin:0 10px">
+                    <el-button icon="el-icon-picture-outline" title="上传图片" @click="moveDowmTopic()"></el-button>
+                  </div>
+                </transition>
+
+                <el-button type="danger" icon="el-icon-delete" title="删除" @click="delTopic()"></el-button>
+              </div>
+            </transition>
+          </div>
+
+          <!-- 导航按钮 -->
+          <ul v-for="(topics, Topics_index) in sortedTopics" :key="Topics_index">
+            <li class="topic-nav-item" @click.self="edit(-1,-1)">
+              <div class="nav-title">{{topicTypeName_mixin(topics.type)}}</div>
+              <span class="topic-nav-button" :class="editInedx.type==topics.type" v-for="(item , index) in topics.topic_content" :key="index" @click="topicNav(Topics_index,index)">
+                {{topicNavIndex_mixin(Topics_index,index)}}
+              </span>
+
+              <span class="topic-nav-button" @click="newTopic(topics.type)">
+                <i class="el-icon-plus"></i>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div style="clear:both;"></div>
+      </div>
+
+      <div class="back-top" @click="backTop_mixin()">
+        <i class="el-icon-arrow-up"></i>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import "../assets/less/testPaper.less";
+import testPaperMixin from "../mixins/testPaper-mixin";
+
+export default {
+  name: "TestPaperTch",
+  mixins: [testPaperMixin],
+  data() {
+    return {
+      //按题目类型分类好的题目数据
+      //题目类型==>  0:单选题  1:多选题  2:判断题  3:填空题  4:简答题
+      sortedTopics: [
+        { type: 0, topic_content: [], score: 0, showAllScore: false },
+        { type: 1, topic_content: [], score: 0, showAllScore: false },
+        { type: 2, topic_content: [], score: 0, showAllScore: false },
+        { type: 3, topic_content: [], score: 0, showAllScore: false },
+        { type: 4, topic_content: [], score: 0, showAllScore: false },
+      ],
+
+      //试卷数据
+      testData: {
+        tp_id: -1,
+        name: "点击编辑试卷名称", //试卷名称
+        creator_id: 0,
+        create_date: "",
+        time: 60, //答题时间
+        subject_id: 1,
+        topic_num: 0, //题目数量
+        total_score: 100, //总分
+        pass_mark: 60, //及格分数
+        auto_mack: 1, //是否自动评分
+        permit_copy: 1, //是否允许复制文本
+        repeat_test: 1, //用户可重复考试次数
+        disrupt_order: 0, //是否打乱题目顺序
+
+        topic: [], //题目数组
+      },
+
+      //用户数据
+      userData: {
+        id: "",
+        name: "李子建",
+      },
+
+      //当前编辑的题目索引
+      editInedx: {
+        type: "-1",
+        index: "-1",
+        input: "-2",
+      },
+
+      topicDifficultyOptions: ["简单", "中等", "困难"], //题目难度选项
+
+      //侧导航栏是否悬浮
+      isFixed: false,
+      topic_nav_style: "top:0px",
+    };
+  },
+
+  computed: {
+    //试卷总分
+    total_score() {
+      var score = 0;
+      this.sortedTopics.forEach((element) => {
+        element.topic_content.forEach((item) => {
+          // console.log(typeof(item.score));
+          score += parseInt(item.score);
+        });
+      });
+      this.testData.total_score = score;
+      return score;
+    },
+
+    //按填空符(三个下划线)划分字符串
+    fillSymbolStr() {
+      return function (str) {
+        var q = str.split("___");
+        return q;
+      };
+    },
+  },
+
+  created() {
+    // console.log(this.sortedTopics);
+    var tp_id = this.$route.params.tp_id;
+    // 如果试卷id存在,则为编辑试卷
+    if (typeof tp_id != "undefined") {
+      this.testData.tp_id = tp_id;
+      this.getTestPaper();
+    }
+    this.testData.creator_id = localStorage.getItem("user_id");
+    this.userData.id = localStorage.getItem("user_id");
+  },
+
+  mounted() {
+    // 监听滚动事件，然后用handleScroll这个方法进行相应的处理
+    window.addEventListener("scroll", this.handleScroll);
+  },
+
+  methods: {
+    //提交试卷
+    submit() {
+      /*  处理题目信息 */
+      var topicData = [];
+      this.sortedTopics.forEach((element) => {
+        if (element.topic_content.length != 0) {
+          element.topic_content.forEach((item) => {
+            //深拷贝
+            var newItem = JSON.parse(JSON.stringify(item));
+            topicData.push(newItem);
+          });
+        }
+      });
+
+      //处理选择题选项
+      topicData.forEach((item) => {
+        var choice = "";
+        item.choice.forEach((c) => {
+          choice += c + "\n";
+        });
+        item.choice = choice.slice(0, -1);
+      });
+
+      //处理正确答案
+      topicData.forEach((item) => {
+        if (item.correct_answer instanceof Array) {
+          var correct_answer = "";
+          item.correct_answer.forEach((c) => {
+            correct_answer += c + "\n";
+          });
+          item.correct_answer = correct_answer.slice(0, -1);
+        }
+        console.log(item);
+      });
+
+      //处理试卷信息
+      var testData = JSON.parse(JSON.stringify(this.testData));
+      testData.topic = topicData;
+      testData.topic_num = topicData.length;
+      testData.create_date = this.getNowFormatDate("yyyy-MM-dd hh:mm:ss");
+      testData.auto_mack = testData.auto_mack == true ? "1" : "0";
+      testData.disrupt_order = testData.disrupt_order == true ? "1" : "0";
+      testData.permit_copy = testData.permit_copy == true ? "1" : "0";
+
+      // console.log(testData);
+
+      var request = {
+        testPaper: testData,
+        token: localStorage.getItem("_token"),
+      };
+      request = JSON.stringify(request);
+      // console.log(request);
+
+      if (testData.tp_id != -1) {
+        var url = "updateTestPaper";
+      } else {
+        var url = "createTestPaper";
+      }
+
+      this.$axios({
+        method: "post",
+        url,
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        data: request,
+      })
+        .then((result) => {
+          console.log("result ==> ", result);
+          if (result.data.code == 200) {
+            this.$message.success(result.data.msg);
+            if (url == "createTestPaper") {
+              this.$router.push("/testPaperTch/" + result.data.data);
+            }
+          } else {
+            this.$message.error(result.data.msg);
+          }
+        })
+        .catch((err) => {
+          console.log("err ==> ", err);
+        });
+    },
+
+    //编辑试卷---获取试卷信息
+    getTestPaper() {
+      this.$axios({
+        method: "get",
+        url: "/getTestPaperByTp_id",
+        params: {
+          token: localStorage.getItem("_token"),
+          tp_id: this.testData.tp_id,
+        },
+      })
+        .then((result) => {
+          console.log("result.data ==> ", result.data);
+
+          if (result.data.code == 200) {
+            var testData = result.data.data;
+          } else {
+            this.$message.error(result.data.msg);
+            return;
+          }
+
+          //处理试卷的题目数据
+          testData.topic.forEach((item) => {
+            if (item.topic_type == 1 || item.topic_type == 3) {
+              item.correct_answer = item.correct_answer.split(/[\n]/g);
+            }
+            //按换行符分割字符串
+            item.choice = item.choice.split(/[\n]/g);
+          });
+          testData.auto_mack = testData.auto_mack == 1 ? true : false;
+          testData.disrupt_order = testData.disrupt_order == 1 ? true : false;
+          testData.permit_copy = testData.permit_copy == 1 ? true : false;
+
+          this.testData = testData;
+          console.log("testData ==> ", this.testData);
+
+          //按题目类型分类并保存
+          var topics = this.testData.topic;
+          for (let i = 0; i < topics.length; i++) {
+            for (let item of this.sortedTopics) {
+              // console.log(topics[i].topic_type,item.type);
+              if (topics[i].topic_type == item.type) {
+                item.topic_content.push(topics[i]);
+              }
+            }
+          }
+          console.log(this.sortedTopics);
+        })
+        .catch((err) => {
+          console.log("err ==> ", err);
+        });
+    },
+
+    //统一设置题目分数
+    setAllScore(val , type){
+      val = parseInt(val)
+      this.sortedTopics[type].topic_content.forEach(item =>{
+        item.score = val;
+      })
+    },
+
+    //设置当前编辑中的题目
+    edit(type, index) {
+      if (this.editInedx.type == type && this.editInedx.index == index) {
+        console.log("拦截");
+        return;
+      }
+      this.editInedx.type = type;
+      this.editInedx.index = index;
+    },
+
+    //是否在编辑状态
+    isEdit(type, index, input = -2) {
+      if (
+        this.editInedx.type == type &&
+        this.editInedx.index == index &&
+        this.editInedx.input == input
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    //滚动事件
+    handleScroll() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop; // 滚动条偏移量
+      if (scrollTop > 154) {
+        this.topic_nav_style = "top:" + (scrollTop + 20) + "px";
+        this.isFixed = true;
+      } else {
+        this.isFixed = false;
+      }
+    },
+
+    //点击题号导航跳转
+    topicNav(type, index) {
+      var totalIndex = this.topicNavIndex_mixin(type, index) - 1;
+      setTimeout(() => {
+        document
+          .getElementsByClassName("topic-content")
+          [totalIndex].scrollIntoView({ behavior: "smooth" });
+      }, 100);
+      this.edit(type, index);
+    },
+
+    //新建题目
+    newTopic(type) {
+      this.sortedTopics[type].topic_content.push({
+        u_id: this.userData.id,
+        topic_type: type,
+        question: "这是我新建的题目",
+        choice: ["选项1", "选项2", "选项3", "选项4"],
+        correct_answer: [],
+        analysis: "这是答案分析",
+        difficulty: "中等",
+        score: 0,
+        subject_id: "1",
+      });
+
+      var time = setTimeout(() => {
+        this.topicNav(type, this.sortedTopics[type].topic_content.length - 1);
+        clearInterval(time);
+      }, 100);
+    },
+
+    //删除当前正在编辑的题目
+    delTopic() {
+      var type = this.editInedx.type;
+      var index = this.editInedx.index;
+      this.sortedTopics[type].topic_content.splice(index, 1);
+    },
+
+    //上移或下移当前正在编辑的题目  -1:上移   1:下移
+    moveTopic(n) {
+      var type = this.editInedx.type;
+      var index = this.editInedx.index;
+
+      if (index == 0 && n == -1) {
+        console.log("拦截");
+        return;
+      }
+      if (index == this.sortedTopics[type].topic_content.length - 1 && n == 1) {
+        console.log("拦截");
+        return;
+      }
+
+      var topic = this.sortedTopics[type].topic_content[index];
+      var upTopic = this.sortedTopics[type].topic_content[index + n];
+
+      this.sortedTopics[type].topic_content.splice(index, 1, upTopic);
+      this.sortedTopics[type].topic_content.splice(index + n, 1, topic);
+
+      var time = setTimeout(() => {
+        this.topicNav(type, index + n, 10);
+        clearInterval(time);
+      }, 100);
+    },
+
+    //删除选项
+    delRadios(type, tIndex, index) {
+      this.sortedTopics[type].topic_content[tIndex].choice.splice(index, 1);
+    },
+
+    //添加选项
+    addRadios(type, tIndex) {
+      var choiceLength =
+        this.sortedTopics[type].topic_content[tIndex].choice.length + 1;
+      if (choiceLength > 10) {
+        this.$message({
+          message: "不能再添加选项了喔!",
+          type: "warning",
+        });
+        return;
+      }
+      this.sortedTopics[type].topic_content[tIndex].choice.push(
+        "选项" + choiceLength
+      );
+    },
+
+    //添加填空符
+    addFillSymbol(tIndex) {
+      var str = this.sortedTopics[3].topic_content[tIndex].question;
+      // console.log(str);
+      this.sortedTopics[3].topic_content[tIndex].question = str + "___";
+    },
+
+    //添加关键字
+    addKeyWord(tIndex) {
+      this.sortedTopics[4].topic_content[tIndex].correct_answer.push("");
+      console.log(this.sortedTopics[4].topic_content[tIndex]);
+    },
+  },
+};
+</script>
