@@ -15,46 +15,34 @@
         display: flex;
         padding: 24px 8px;
         border-bottom: 1px solid #DCDFE6;
-    }
-    .topic-content .left{
-        width: 800px;
-    }
-    .topic-content .right{
-        padding: 0 24px;
-        font-size: 16px;
-    }
-    .topic-content .correct_answer{
-        padding: 12px  0;
-        font-size: 16px;
-    }
-    .topic-content .correct .el-radio__label{
-        color: #02c39a !important;
-    }
-    // .el-radio__input.is-checked .el-radio__inner{
-    //     border-color: #02c39a;
-    //     background: #02c39a;
-    // }
-    // .el-radio__input.is-disabled.is-checked .el-radio__inner::after{
-    //     background: #fff;
-    // }
 
-    .topic-nav-button.correct,
-    .topic-nav-but.correct{
-        background:#02c39a !important;
-        border:1px solid #02c39a !important;
-        color: #fff;
-    }
-    .topic-nav-button.error,
-    .topic-nav-but.error{
-        background: #ff6b6b;
-        border:1px solid #ff6b6b !important;
-        color: #fff;
+        .left{
+            width: 800px;
+        }
+        .left .correctAnswer{
+            padding: 12px  0;
+            font-size: 16px;
+        }
 
+        .right{
+            padding: 0 24px;
+            font-size: 16px;
+        }
+        .right .correctAnswer{
+            padding: 12px  0;
+            font-size: 16px;
+        }
+    }
+    .el-radio.is-disabled.is-checked .el-radio__input.is-disabled + span.el-radio__label, 
+    .el-checkbox.is-disabled.is-checked .el-checkbox__input.is-disabled + span.el-checkbox__label{
+        color: #ff6b6b;
     }
 
     .topics .topic:last-child ul li:last-child{
         border: none;
     }
+
+    
 
 
 }

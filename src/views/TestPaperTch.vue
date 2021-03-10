@@ -4,19 +4,19 @@
       <div class="header"></div>
       <!-- 试卷信息 -->
       <div class="title">
-        <el-input v-model="testData.name" class="testName" placeholder="请输入内容"></el-input>
+        <el-input v-model="testData.examName" class="testName" placeholder="请输入内容"></el-input>
         <ul>
-          <li class="test-info">出卷者: {{ userData.name }}</li>
+          <li class="test-info">出卷者: {{ testData.creatorName }}</li>
           <li class="test-info">
             答题时间:
             <el-input-number v-model="testData.time" controls-position="right" :step="10" size="mini" :min="1"></el-input-number>
             分钟
           </li>
           <li class="test-info">题目数量: 共 {{ topicNavIndex_mixin(4,sortedTopics[4].topic_content.length-1) }} 道</li>
-          <li class="test-info">总分: {{ total_score }} 分</li>
+          <li class="test-info">总分: {{ totalScore }} 分</li>
           <li class="test-info">
             及格分数:
-            <el-input-number v-model="testData.pass_mark" controls-position="right" :step="1" size="mini" :min="0" :max="total_score"></el-input-number>
+            <el-input-number v-model="testData.passMark" controls-position="right" :step="1" size="mini" :min="0" :max="totalScore"></el-input-number>
             分
           </li>
           <!-- <li class="test-info">所属班级: {{ testData.classes_name }}</li> -->
@@ -24,16 +24,16 @@
         </ul>
         <ul>
           <li class="test-info">重复考试的次数:
-            <el-input-number v-model="testData.repeat_test" controls-position="right" :step="1" size="mini" :min="1"></el-input-number>
+            <el-input-number v-model="testData.repeatTest" controls-position="right" :step="1" size="mini" :min="1"></el-input-number>
           </li>
           <li class="test-info">是否允许复制文本:
-            <el-switch v-model="testData.permit_copy" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+            <el-switch v-model="testData.permitCopy" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
           </li>
           <li class="test-info">是否打乱题目顺序:
-            <el-switch v-model="testData.disrupt_order" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+            <el-switch v-model="testData.disruptOrder" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
           </li>
           <li class="test-info">是否自动评分:
-            <el-switch v-model="testData.auto_mack" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+            <el-switch v-model="testData.autoMack" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
             <el-tooltip class="item" effect="light" content="取消自动评分系统依然会自动批改,但会先显示分数为0分,等待教师审批确认" placement="bottom-start">
               <i class="el-icon-question"></i>
             </el-tooltip>
@@ -74,7 +74,7 @@
                   <!-- 单项选择题 -->
                   <div class="userAnswer" v-if="s_topics.type==0">
                     <div class="radios">
-                      <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.correct_answer" :label="item">
+                      <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.correctAnswer" :label="item">
                         <span class="topicNavIndex">{{String.fromCharCode(65+index)}}、</span>
                         <span v-if="editInedx.type==0&&editInedx.index==tIndex">
                           <el-input v-model="t.choice[index]" type="textarea" autosize></el-input>
@@ -91,7 +91,7 @@
                   <!-- 多项选择题 -->
                   <div class="userAnswer" v-if="s_topics.type==1">
                     <div class="checkbox">
-                      <el-checkbox-group v-model="t.correct_answer">
+                      <el-checkbox-group v-model="t.correctAnswer">
                         <el-checkbox :label="item" v-for="(item, index) in t.choice" :key="index">
                           <span class="topicNavIndex">{{String.fromCharCode(65+index)}}、</span>
                           <span v-if="editInedx.type==1&&editInedx.index==tIndex">
@@ -110,8 +110,8 @@
                   <!-- 判断题 -->
                   <div class="userAnswer" v-if="s_topics.type==2">
                     <div class="TrueOrFalse">
-                      <el-radio v-model="t.correct_answer" label="true">正确</el-radio>
-                      <el-radio v-model="t.correct_answer" label="false">错误</el-radio>
+                      <el-radio v-model="t.correctAnswer" label="true">正确</el-radio>
+                      <el-radio v-model="t.correctAnswer" label="false">错误</el-radio>
                     </div>
                   </div>
 
@@ -122,7 +122,7 @@
 
                     <div class="fillInBlank">
                       <div v-for="(q, index) in fillSymbolStr(t.question)" :key="index">
-                        <el-input type="textarea" autosize placeholder="请回答" v-if="index!=fillSymbolStr(t.question).length-1" v-model="t.correct_answer[index]">
+                        <el-input type="textarea" autosize placeholder="请回答" v-if="index!=fillSymbolStr(t.question).length-1" v-model="t.correctAnswer[index]">
                         </el-input>
                       </div>
                     </div>
@@ -132,18 +132,18 @@
                   <div class="userAnswer" v-if="s_topics.type==4">
                     <div class="text">
                       <strong>&nbsp;&nbsp;关键字</strong>
-                      <div v-for="(q, index) in t.correct_answer" :key="index">
-                        <el-input type="textarea" autosize placeholder="请输入关键字" v-model="t.correct_answer[index]"> </el-input>
+                      <div v-for="(q, index) in t.correctAnswer" :key="index">
+                        <el-input type="textarea" autosize placeholder="请输入关键字" v-model="t.correctAnswer[index]"> </el-input>
                       </div>
                       <el-button class="addRadios" size="mini" icon="el-icon-plus" @click="addKeyWord(tIndex)">添加关键字</el-button>
-                      {{t.correct_answer}}
+                      <!-- {{t.correctAnswer}} -->
                     </div>
                   </div>
 
                   <!-- 正确答案 -->
-                  <p class="correct_answer" v-if="s_topics.type!=4">
+                  <p class="correctAnswer" >
                     <strong>正确答案: </strong>
-                    {{ t.correct_answer }}
+                    {{ t.correctAnswer }}
                   </p>
                   <div class="difficulty fl">
                     <strong>难度: </strong>
@@ -244,23 +244,18 @@ export default {
         { type: 4, topic_content: [], score: 0, showAllScore: false },
       ],
 
-      //试卷数据
+      // //试卷数据
       testData: {
-        tp_id: -1,
-        name: "点击编辑试卷名称", //试卷名称
-        creator_id: 0,
-        create_date: "",
+        examId: -1,
+        examName: "点击编辑试卷名称", //试卷名称
         time: 60, //答题时间
-        subject_id: 1,
-        topic_num: 0, //题目数量
-        total_score: 100, //总分
-        pass_mark: 60, //及格分数
-        auto_mack: 1, //是否自动评分
-        permit_copy: 1, //是否允许复制文本
-        repeat_test: 1, //用户可重复考试次数
-        disrupt_order: 0, //是否打乱题目顺序
-
-        topic: [], //题目数组
+        topicNum: 0, //题目数量
+        passMark: 0,
+        autoMack: 1, //是否自动评分
+        permitCopy: 1, //是否允许复制文本
+        repeatTest: 1, //用户可重复考试次数
+        disruptOrder: 0, //是否打乱题目顺序
+        creatorName: this.$store.state.userName
       },
 
       //用户数据
@@ -286,7 +281,7 @@ export default {
 
   computed: {
     //试卷总分
-    total_score() {
+    totalScore() {
       var score = 0;
       this.sortedTopics.forEach((element) => {
         element.topic_content.forEach((item) => {
@@ -294,7 +289,7 @@ export default {
           score += parseInt(item.score);
         });
       });
-      this.testData.total_score = score;
+      this.testData.totalScore = score;
       return score;
     },
 
@@ -309,14 +304,13 @@ export default {
 
   created() {
     // console.log(this.sortedTopics);
-    var tp_id = this.$route.params.tp_id;
+    var examId = this.$route.params.tp_id;
     // 如果试卷id存在,则为编辑试卷
-    if (typeof tp_id != "undefined") {
-      this.testData.tp_id = tp_id;
+    if (typeof examId != "undefined") {
       this.getTestPaper();
     }
-    this.testData.creator_id = localStorage.getItem("user_id");
-    this.userData.id = localStorage.getItem("user_id");
+    // this.testData.creatorId = localStorage.getItem("user_id");
+    // this.userData.id = localStorage.getItem("user_id");
   },
 
   mounted() {
@@ -350,115 +344,92 @@ export default {
 
       //处理正确答案
       topicData.forEach((item) => {
-        if (item.correct_answer instanceof Array) {
-          var correct_answer = "";
-          item.correct_answer.forEach((c) => {
-            correct_answer += c + "\n";
+        if (item.correctAnswer instanceof Array) {
+          var correctAnswer = "";
+          item.correctAnswer.forEach((c) => {
+            correctAnswer += c + "\n";
           });
-          item.correct_answer = correct_answer.slice(0, -1);
+          item.correctAnswer = correctAnswer.slice(0, -1);
         }
         console.log(item);
       });
 
       //处理试卷信息
       var testData = JSON.parse(JSON.stringify(this.testData));
-      testData.topic = topicData;
-      testData.topic_num = topicData.length;
-      testData.create_date = this.getNowFormatDate("yyyy-MM-dd hh:mm:ss");
-      testData.auto_mack = testData.auto_mack == true ? "1" : "0";
-      testData.disrupt_order = testData.disrupt_order == true ? "1" : "0";
-      testData.permit_copy = testData.permit_copy == true ? "1" : "0";
+      testData.topicTchDTOList = topicData;
+      testData.creatorName = this.$store.state.userName;
+      testData.topicNum = topicData.length;
+      testData.autoMack = testData.autoMack == true ? "1" : "0";
+      testData.disruptOrder = testData.disruptOrder == true ? "1" : "0";
+      testData.permitCopy = testData.permitCopy == true ? "1" : "0";
 
       // console.log(testData);
 
       var request = {
-        testPaper: testData,
-        token: localStorage.getItem("_token"),
+        ...testData,
       };
-      request = JSON.stringify(request);
-      // console.log(request);
 
-      if (testData.tp_id != -1) {
-        var url = "updateTestPaper";
+      if (testData.examId != -1) {
+        var url = "/updateTestPaper";
       } else {
-        var url = "createTestPaper";
+        var url = "/createTestPaper";
       }
-
-      this.$axios({
-        method: "post",
-        url,
-        headers: {
-          "Content-Type": "application/json; charset=UTF-8",
-        },
-        data: request,
-      })
-        .then((result) => {
-          console.log("result ==> ", result);
-          if (result.data.code == 200) {
-            this.$message.success(result.data.msg);
-            if (url == "createTestPaper") {
-              this.$router.push("/testPaperTch/" + result.data.data);
-            }
-          } else {
-            this.$message.error(result.data.msg);
+      console.log(request);
+      this.$http.post(url,request).then(res =>{
+        if (res.code == 200) {
+          this.$message.success(res.msg);
+          if (url == "/createTestPaper") {
+            this.$router.push("/testPaperTch/" + res.data.examId);
           }
-        })
-        .catch((err) => {
-          console.log("err ==> ", err);
-        });
+        }
+      })
     },
 
     //编辑试卷---获取试卷信息
-    getTestPaper() {
-      this.$axios({
-        method: "get",
-        url: "/getTestPaperByTp_id",
-        params: {
-          token: localStorage.getItem("_token"),
-          tp_id: this.testData.tp_id,
-        },
-      })
-        .then((result) => {
-          console.log("result.data ==> ", result.data);
+    async getTestPaper() {
+      let params = {
+        examId: this.$route.params.tp_id,
+      }
+      await this.$http.get('/getTestPaperByTp_id',{params}).then(res =>{
+        // this.testData = res.data
+          console.log("result.data ==> ", res);
 
-          if (result.data.code == 200) {
-            var testData = result.data.data;
+          if (res.code == 200) {
+            var testData = res.data;
           } else {
-            this.$message.error(result.data.msg);
             return;
           }
 
           //处理试卷的题目数据
-          testData.topic.forEach((item) => {
-            if (item.topic_type == 1 || item.topic_type == 3) {
-              item.correct_answer = item.correct_answer.split(/[\n]/g);
+          testData.topicTchDTOList.forEach((item) => {
+            if (item.topicType == 4 || item.topicType == 3) {
+              item.correctAnswer = item.correctAnswer.split(/[\n]/g);
             }
             //按换行符分割字符串
             item.choice = item.choice.split(/[\n]/g);
           });
-          testData.auto_mack = testData.auto_mack == 1 ? true : false;
-          testData.disrupt_order = testData.disrupt_order == 1 ? true : false;
-          testData.permit_copy = testData.permit_copy == 1 ? true : false;
+          testData.autoMack = testData.autoMack == 1 ? true : false;
+          testData.disruptOrder = testData.disruptOrder == 1 ? true : false;
+          testData.permitCopy = testData.permitCopy == 1 ? true : false;
 
           this.testData = testData;
           console.log("testData ==> ", this.testData);
 
           //按题目类型分类并保存
-          var topics = this.testData.topic;
+          var topics = this.testData.topicTchDTOList;
           for (let i = 0; i < topics.length; i++) {
             for (let item of this.sortedTopics) {
-              // console.log(topics[i].topic_type,item.type);
-              if (topics[i].topic_type == item.type) {
+          //     // console.log(topics[i].topicType,item.type);
+              if (topics[i].topicType == item.type) {
                 item.topic_content.push(topics[i]);
               }
             }
           }
           console.log(this.sortedTopics);
-        })
-        .catch((err) => {
-          console.log("err ==> ", err);
-        });
+      })
     },
+
+
 
     //统一设置题目分数
     setAllScore(val , type){
@@ -520,14 +491,14 @@ export default {
     newTopic(type) {
       this.sortedTopics[type].topic_content.push({
         u_id: this.userData.id,
-        topic_type: type,
+        topicType: type,
         question: "这是我新建的题目",
         choice: ["选项1", "选项2", "选项3", "选项4"],
-        correct_answer: [],
+        correctAnswer: [],
         analysis: "这是答案分析",
         difficulty: "中等",
-        score: 0,
-        subject_id: "1",
+        score: 10,
+        subjectId: "1",
       });
 
       var time = setTimeout(() => {
@@ -599,7 +570,7 @@ export default {
 
     //添加关键字
     addKeyWord(tIndex) {
-      this.sortedTopics[4].topic_content[tIndex].correct_answer.push("");
+      this.sortedTopics[4].topic_content[tIndex].correctAnswer.push("");
       console.log(this.sortedTopics[4].topic_content[tIndex]);
     },
   },

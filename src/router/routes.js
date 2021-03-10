@@ -2,12 +2,18 @@ export const routes = [
     {
       path: '/login',
       name: 'Login',
-      component: () => import( '../views/Login.vue')
+      component: () => import( '../views/Login.vue'),
+      meta:{
+        title:'登录'
+      },
     },
     {
       path: '/register',
       name: 'Register',
-      component: () => import( '../views/Register.vue')
+      component: () => import( '../views/Register.vue'),
+      meta:{
+        title:'注册'
+      },
     },
     {
       path: '/main',
@@ -28,7 +34,10 @@ export const routes = [
         {
           path:"me",
           name:"Me",
-          component: () => import('../views/main/Me.vue')
+          component: () => import('../views/main/Me.vue'),
+          meta:{
+            title:'个体中心'
+          },
         },
         {
           path:"classes",
@@ -43,7 +52,18 @@ export const routes = [
             {
               path:"classesSpace/:id",
               name:"ClassesSpace",
-              component: () => import('../views/classes/ClassesSpace.vue')
+              component: () => import('../views/classes/ClassesSpace.vue'),
+              meta:{
+                title:'班级空间'
+              },
+            },
+            {
+              path:"testSituation",
+              name:"TestSituation",
+              component: () => import('../views/classes/TestSituation.vue'),
+              meta:{
+                title:'班级考试情况'
+              },
             },
           ]
         },
@@ -55,7 +75,10 @@ export const routes = [
         {
           path:"myTest",
           name:"MyTest",
-          component: () => import('../views/main/MyTest.vue')
+          component: () => import('../views/main/MyTest.vue'),
+          meta:{
+            title:'我的试卷'
+          },
         },
         {
           path:"myFinishTest",
@@ -102,7 +125,7 @@ export const routes = [
       component: () => import( '../views/TestPaperTch.vue')
     },
     {
-      path: '/markTestPaper/:tp_id/:c_id',
+      path: '/markTestPaper',
       name: 'MarkTestPaper',
       component: () => import( '../views/MarkTestPaper.vue'),
       meta:{

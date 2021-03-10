@@ -8,11 +8,11 @@
             <div class="userInfo">
                 <div class="item">
                     <span class="title">用户Id :</span>
-                    <div class="con">{{userData.number}}</div>
+                    <div class="con">U{{userData.userId}}</div>
                 </div>
                 <div class="item">
                     <span class="title">用户名 :</span>
-                    <div class="con">{{userData.name}}</div>
+                    <div class="con">{{userData.userName}}</div>
                 </div>
                 <div class="item">
                     <span class="title">邮 箱 :</span>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="item">
                     <span class="title">创建时间 :</span>
-                    <div class="con">{{userData.create_date}}</div>
+                    <div class="con">{{userData.createDate}}</div>
                 </div>
                 <div class="item">
                     <span class="title">工 作 :</span>
@@ -61,27 +61,11 @@ export default {
     },
 
     methods:{
+        // 获取用户信息
         getUserData(){
-            // 获取用户信息
-            this.$axios({
-                method: "get",
-                url: "/getUserById",
-                params: {
-                    token: localStorage.getItem("_token")
-                },
+            this.$http.get("/getUserById",{}).then(res =>{
+                this.userData = res.data
             })
-                .then((result) => {
-                console.log("result ==> ", result);
-                if(result.data.code==200){
-                    this.userData = result.data.data
-                }else{
-                    this.$message.error(result.data.msg);
-                    return
-                }
-                })
-                .catch((err) => {
-                console.log("err ==> ", err);
-                });
         }
     }
 

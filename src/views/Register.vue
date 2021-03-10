@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login register">
     <div class="info">
       <p>注册账号<span @click="goRouter('login')">返回</span></p>
       <el-form
@@ -128,37 +128,17 @@ export default {
 
             // 处理post请求参数
             var request={
-                name:this.form.name,
+                userName:this.form.name,
                 password:this.form.password,
                 email:this.form.email,
                 phone:this.form.phone,
-                date:this.getNowFormatDate('yyyy-MM-dd hh:mm:ss'),
             }
-            request=this.$qs.stringify(request)
-
-            this.$axios({
-              method:'post',
-              url:'/register',
-              data:request
-            }).then(result =>{
-              console.log("register -> result", result)
-
-              if(result.data.code == 200){
-                 //注册成功跳转
+            this.$http.post('/register',request).then(res =>{
+              if(res.code == 200){
                 this.goRouter({name:"Login"})
                 this.$message.success("注册成功");
-              }else{
-                //提示错误信息
-                this.$message.error(result.data.msg);
               }
-              
-
-            }).catch(err => {
-              console.log('err ==> ', err);
-            })  
-            console.log(this.form);
-
-
+            })
             
           } else {
             console.log('error submit!!');
@@ -176,7 +156,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    .info{
-        margin-top: 100px;
-    }
+.register .info{
+  height: 480px;
+}
 </style>

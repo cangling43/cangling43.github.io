@@ -56,40 +56,20 @@ export default {
     login(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.form);
             // 处理请求参数
             var request={
               name:this.form.name,
               password:this.form.password
             }
-            request=this.$qs.stringify(request)
-            this.$axios({
-              method:'post',
-              url:'/login',
-              data:request
-            }).then(result =>{
-              console.log('result ==> ', result);
-
-              if(result.data.code==200){
-                var data = result.data.data;
+            this.$http.post('/login',request).then(res =>{
+              if(res.code==200){
+                var data = res.data;
                 //登录成功跳转
                 localStorage.setItem('_token', data.token);
-                localStorage.setItem('user_status', data.status);
                 localStorage.setItem('user_name', data.name);
                 this.goRouter({name:"Home"})
-              }else{
-                //提示错误信息
-                this.$message.error(result.data.msg);
               }
-            }).catch(err => {
-              console.log('err ==> ', err);
-            })  
-
-            //登录成功跳转
-            // this.goRouter({name:"Home"})
-
-
-            
+            })        
           } else {
             console.log('error submit!!');
             return false;

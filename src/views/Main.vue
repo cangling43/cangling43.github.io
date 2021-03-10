@@ -4,9 +4,12 @@
       <div class="logo" @click="goRouter('/main/home','Home')">考试汇</div>
       <div class="person" >
         <div class="img"><img src="" alt=""></div>
-        <div class="name">{{userName}}</div>
+        <div class="name">{{$store.state.userName}}</div>
         <div class="dropdown" >
           <div class="item">个人中心</div>
+          <div class="item">我的消息</div>
+          <div class="item" v-if="$role('teacher')" @click="changeRole()">变更为学生身份</div>
+          <div class="item" v-if="$role('student')" @click="changeRole()">变更为教师身份</div>
           <div class="item">我的消息</div>
           <div class="item" @click="loginOut">退出登录</div>
         </div>
@@ -63,97 +66,11 @@ export default {
   },
 
   created(){
-    var user_status=localStorage.getItem("user_status");
+    var user_status = this.$store.state.userRole;
     if(user_status=="teacher"){
-      this.menu=[
-        {
-          i:"el-icon-s-home",
-          title:"首页",
-          path:"/main/home",
-          name:"Home"
-        },
-        {
-          i:"el-icon-s-grid",
-          title:"我的班级",
-          path:"/main/classes/classesList",
-          name:["Classes","ClassesList","ClassesSpace"]
-        },
-        {
-          i:"el-icon-document-copy",
-          title:"我的试卷",
-          path:"/main/myTest",
-          name:"MyTest"
-        },
-        {
-          i:"el-icon-tickets",
-          title:"我的题库",
-          path:"/main/topic",
-          name:"Topic"
-        },
-        {
-          i:"el-icon-document-checked",
-          title:"审批试卷",
-          path:"/main/myCheckTest",
-          name:"MyCheckTest"
-        },
-        {
-          i:"el-icon-edit-outline",
-          title:"我考过的试卷",
-          path:"/main/myFinishTest",
-          name:"MyFinishTest"
-        },
-        {
-          i:"el-icon-message",
-          title:"我的消息",
-          path:"/main/myMessage/inboxes",
-          name:["Inboxes","SendMessage","MyMessage"]
-        },
-        {
-          i:"el-icon-user",
-          title:"个人中心",
-          path:"/main/me",
-          name:"Me"
-        }
-      ];
+      this.menu= this.$store.state.tchNav;
     }else if(user_status=="student"){
-      this.menu=[
-        {
-          i:"el-icon-s-home",
-          title:"首页",
-          path:"/main/home",
-          name:"Home"
-        },
-        {
-          i:"el-icon-s-grid",
-          title:"我的班级",
-          path:"/main/classes/classesList",
-          name:["Classes","ClassesList","ClassesSpace"]
-        },
-        {
-          i:"el-icon-edit-outline",
-          title:"我考过的试卷",
-          path:"/main/MyFinishTest",
-          name:"MyFinishTest"
-        },
-        {
-          i:"el-icon-message",
-          title:"我的消息",
-          path:"/main/myMessage/inboxes",
-          name:["Inboxes","SendMessage","MyMessage"]
-        },
-        {
-          i:"el-icon-user",
-          title:"个人中心",
-          path:"/main/me",
-          name:"Me"
-        },
-        {
-          i:"iconfont icon-laoshi",
-          title:"变更为教师身份",
-          path:"/main/changeStatus",
-          name:"ChangeStatus"
-        }
-      ];
+      this.menu= this.$store.state.stuNav;
     }else{
       this.$router.push("/Login")
     }
@@ -166,7 +83,7 @@ export default {
       }
     }
 
-    this.userName = localStorage.getItem("user_name")
+    this.userName = this.$store.state.userName;
     // console.log(this.$route);
 
   },
@@ -187,6 +104,16 @@ export default {
 
     },
 
+    //切换身份
+    changeRole(){
+      this.$http.put('/changeRole',{}).then(res =>{
+        if(res.code == 200){
+          this.$message.success('变更身份成功')
+          // this.$router.push("/main/home")
+          this.$router.go(0)
+        }
+      })
+    },
    
 
     //退出登录

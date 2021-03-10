@@ -18,13 +18,13 @@
     <!-- 加入班级弹框 -->
     <div class="dialog">
       <el-dialog title="确定加入该班级" :visible.sync="dialogVisible" width="30%">
-        <p>班级编号 : {{enterClassesData.classes.number}}</p>
-        <p>班级名称 : {{enterClassesData.classes.name}}</p>
-        <p>创 建 者 : {{enterClassesData.user.name}}</p>
-        <p>加入方式 : {{enterClassesData.classes.joinWay}}</p>
-        <p>创建时间 : {{enterClassesData.classes.create_date}}</p>
-        <p>班级人数 : {{enterClassesData.classes.people_num}}</p>
-        <p>班级简介 : {{enterClassesData.classes.introduction}}</p>
+        <p>班级编号 : {{enterClassesData.classesId}}</p>
+        <p>班级名称 : {{enterClassesData.classesName}}</p>
+        <p>创 建 者 : {{enterClassesData.creatorName}}</p>
+        <p>加入方式 : {{enterClassesData.joinway}}</p>
+        <p>创建时间 : {{enterClassesData.createDate}}</p>
+        <p>班级人数 : {{enterClassesData.peopleNum}}</p>
+        <p>班级简介 : {{enterClassesData.introduction}}</p>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="doEnterClasses">加入</el-button>
@@ -58,9 +58,6 @@ export default {
           people_num: "",
           introduction: "",
         },
-        user: {
-          name: "",
-        },
       },
       // menu:[
       //     {title:"我审批过的试卷",path:"/main/myCheckTest/checkTestList",name:"CheckTestList",id:"-1"},
@@ -88,6 +85,7 @@ export default {
 
     if (this.$route.params.id == undefined) {
       this.activeId = "-1";
+      // console.log(this.$route);
     } else {
       this.activeId = this.$route.params.id;
     }
@@ -177,74 +175,35 @@ export default {
       });
     },
 
-    //参加班级
+    //获取班级信息
     joinClasses() {
-      //判断班级编码是否正确
-      var reg = /^[0-9]{4,10}$/;
+      var reg = /^[0-9]{1,10}$/;
       var id = this.enterClasses_id;
       if (reg.test(id)) {
-        //获取参加的班级信息
-        this.$axios({
-          method: "get",
-          url: "/queryClassesByC_id",
-          params: {
-            c_id: this.enterClasses_id,
-          },
+        let params = {
+          classesId: this.enterClasses_id
+        }
+        this.$http.get('/queryClasses',{params}).then(res =>{
+          this.enterClassesData = res.data;
+          this.dialogVisible = true;
         })
-          .then((result) => {
-            console.log(" result", result);
-
-            if (result.data.code == 200) {
-              this.enterClassesData = result.data.data;
-              //显示弹框
-              this.dialogVisible = true;
-            } else {
-              this.$message(result.data.msg);
-            }
-          })
-          .catch((err) => {
-            console.log("err ==> ", err);
-          });
-        //获取参加的班级信息  end
       } else {
         this.$message("请输入正确的班级编号");
       }
-      //判断班级编码是否正确 end
     },
 
     doEnterClasses() {
       this.dialogVisible = false;
 
-      // 处理post请求参数
-      var request = {
-        token: localStorage.getItem("_token"),
+      var params = {
         c_id: this.enterClasses_id,
-        date: this.getNowFormatDate("yyyy-MM-dd hh:mm:ss"),
       };
-      request = this.$qs.stringify(request);
-
-      //参加班级操作
-      this.$axios({
-        method: "post",
-        url: "/joinClasses",
-        data: request,
+      this.$http.get("/joinClasses",{params}).then(res =>{
+        if(res.code == 200){
+          this.$message.success("加入成功!");
+          this.reload()
+        }
       })
-        .then((result) => {
-          console.log("register -> result", result);
-          if (result.data.code == 200) {
-            this.$message.success("加入成功!");
-            // this.getClasses();
-            // location.reload();
-            this.reload();
-          } else {
-            this.$message(result.data.msg);
-          }
-        })
-        .catch((err) => {
-          console.log("err ==> ", err);
-          this.$message(result.data.msg);
-        });
-      //参加班级操作 end
     },
   },
 };
