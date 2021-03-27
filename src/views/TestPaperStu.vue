@@ -438,7 +438,7 @@ export default {
 
     //题目导航按钮颜色
     emptyAnswer(val) {
-
+      console.log(val);
       //已完成试卷 与 是否公布答案
       if(this.testData.userGrade.examStatus == 1 && this.testData.examClasses.publishAnswer == 1){
         if(val.userScore == val.score){
@@ -451,11 +451,11 @@ export default {
       //未完成试卷
       }else{
         //多选题
-        if (val.topicType == 1) {
-          if (val.userAnswer.join("") == "") {
-            return "";
-          }
-        }
+        // if (val.topicType == 1) {
+        //   if (val.userAnswer.join("") == "") {
+        //     return "";
+        //   }
+        // }
 
         //填空题
         if (val.topicType == 3) {

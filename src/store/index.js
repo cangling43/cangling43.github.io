@@ -96,7 +96,13 @@ export default new Vuex.Store({
     ],
     userName: '',
 
-    userRole: 'student'
+    userRole: 'student',
+
+    joinWayType: [
+      {key: 'all' , value: '允许任何人加入'},
+      {key: 'apply' , value: '需要管理员同意申请'},
+      {key: 'no' , value: '不允许任何人加入'},
+    ]
   },
   mutations: {
     setUserName(state,data){
@@ -116,11 +122,11 @@ export default new Vuex.Store({
 
   },
   actions: {
-    getRole({commit ,state}){
-      api.get("/getUserById",{}).then(res =>{
-        commit('setUserRole',res.data.role)
-        commit('setUserName',res.data.userName)
-      })
+    async getRole({commit ,state}){
+      const res = await api.get("/getUserById",{})
+      commit('setUserRole',res.data.role)
+      commit('setUserName',res.data.userName)
+      return res.data;
     }
   },
   modules: {

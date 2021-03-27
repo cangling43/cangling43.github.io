@@ -1,9 +1,13 @@
 import axios from 'axios';
 import ElementUI from 'element-ui';
 import router from '../router'
+import Vue from 'vue'
+
+const baseURL = 'http://localhost:8082'
+Vue.prototype.$imageBaseUrl = baseURL+'/images/';
 
 const service = axios.create({
-  baseURL: 'http://localhost:8082',
+  baseURL: baseURL,
   timeout: 5000
 })
 

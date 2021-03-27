@@ -14,7 +14,7 @@
           班级人数 : {{ classesData.peopleNum }} 人
         </li>
         <li class="item joinWay">
-          允许加入方式 : {{ classesData.joinway }}
+          允许加入方式 : {{ classesData.joinway | joinWay(that) }}
         </li>
       </ul>
       <span class="title" @click="isopenIntroduction=!isopenIntroduction">
@@ -40,7 +40,7 @@
           <template slot-scope="scope">E{{scope.row.examId}} </template>
         </el-table-column>
         <el-table-column prop="examName" label="考试名称"> </el-table-column>
-        <el-table-column label="考试时间" width="320">
+        <el-table-column label="考试时间" width="350">
           <template slot-scope="scope">{{scope.row.startDate}} 至 {{scope.row.deadline}}</template>
         </el-table-column>
         <el-table-column label="答题时间" width="100">
@@ -57,7 +57,7 @@
         </el-table-column>
         <el-table-column prop="grade"  label="分数" width="100" v-if="$role('student')"> </el-table-column>
         <el-table-column prop="status" label="状态" width="80"> </el-table-column>
-        <el-table-column prop="operate" label="操作" :width="$role('teacher')?'350':'150'">
+        <el-table-column prop="operate" label="操作" :width="$role('teacher')?'300':'150'">
           <template slot-scope="scope">
             <div v-if="$role('teacher')">
               <el-button type="primary" size="small" @click="testSituation(scope.row.examId)" plain>查看考试情况</el-button>
@@ -121,6 +121,8 @@
 
 <script>
 import "@/assets/less/main/classesSpace.less";
+import {getFormatDate} from '@/utils/common.js';
+
 export default {
   name: "ClassesSpace",
   data() {
@@ -160,8 +162,17 @@ export default {
       //更改的考试时间
       releaseTestDate: [],
 
-      updateRelease: {}
+      updateRelease: {},
+
+      that: this,
+      
     };
+  },
+  filters:{
+    joinWay(val,that){
+      let item = that.$store.state.joinWayType.find(item => item.key = val)
+      return item ? item.value : val
+    }
   },
   created() {
     // console.log(this.$route.params.id);
@@ -345,23 +356,21 @@ export default {
     changeTestDate(val) {
       this.changeTestDateDialog = true;
       this.updateRelease = val;
+      this.releaseTestDate = [val.startDate,val.deadline]
       console.log(val);
     },
 
     //更改考试时间数据库操作
     doChangeTestDate() {
       //考试开始时间
-      var start_date = this.getFormatDate(new Date(this.releaseTestDate[0]));
+      var start_date = getFormatDate(new Date(this.releaseTestDate[0]));
       //考试结束时间
-      var deadline = this.getFormatDate(new Date(this.releaseTestDate[1]));
-      //当前时间
-      var release_time = this.getNowFormatDate("yyyy-MM-dd hh:mm:ss");
+      var deadline = getFormatDate(new Date(this.releaseTestDate[1]));
 
       // 处理post请求参数
       var request = {
         examId: this.updateRelease.examId,
         classesId: this.classesData.classesId,
-        releaseTime: release_time,
         startDate: start_date,
         deadline,
         publishScore: this.updateRelease.publishScore,

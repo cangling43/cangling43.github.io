@@ -14,7 +14,7 @@
           <template slot-scope="scope">U{{scope.row.userId}} </template>
         </el-table-column>
         <el-table-column prop="userName" label="成员名称"> </el-table-column>
-        <el-table-column prop="answerDate" label="答题日期"> </el-table-column>
+        <el-table-column prop="answerDate" label="答题日期" width="184"> </el-table-column>
         <el-table-column prop="answerTime" label="答题用时">
           <template slot-scope="scope">{{scope.row.answerTime | formatSeconds}} </template> </el-table-column>
         <el-table-column  label="答题状态"> 

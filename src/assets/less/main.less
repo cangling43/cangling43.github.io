@@ -1,8 +1,10 @@
+@baseColor: #336699;
+
 .header {
     position: relative;
     height: 50px;
     line-height: 50px;
-    background: #333333;
+    background: @baseColor;
     color: #fff;
 
     .logo{
@@ -14,7 +16,7 @@
         transition: 0.3s;
     }
     .logo:hover{
-        color: #409eff;
+        color: #111;
     }
     .person{
         float: right;
@@ -76,23 +78,23 @@
     position: absolute;
     width: 200px;
     height: 100%;
-    background: #333333;
     overflow: auto;
+    background: @baseColor;
     z-index: 999;
     transition: 0.3s;
     // min-height: 460px;
 
     .menu{
         height: 480px;
-        background: #333;
+        background: @baseColor;
     }
     
     .menu-item{
         height: 60px;
         padding-left: 20px;
         line-height: 60px;
-        background: #333333;
-        color: #fff;
+        background: @baseColor;
+        color: #001133;
         font-size: 18px;
         cursor: pointer;
         overflow:hidden;
@@ -104,12 +106,12 @@
         }
     }
     .menu-item:hover{
-        background: #222;
-        color: #409eff;
+        background: #29527c;
+        color: #f7f7f7;
     }
     .menu-item.active{
-        background: #222;
-        color: #409eff;
+        background: #29527c;
+        color: #f7f7f7;
         
         // background: #272727;
     }
@@ -179,7 +181,7 @@
 
     border-radius: 10px;
     box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: #bbb;
+    background: #ccc;
 
 }
 .aside::-webkit-scrollbar-track {/*滚动条里面轨道*/

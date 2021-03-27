@@ -23,9 +23,9 @@
           <li style="clear:both;"></li>
         </ul>
         <ul>
-          <li class="test-info">重复考试的次数:
+          <!-- <li class="test-info">重复考试的次数:
             <el-input-number v-model="testData.repeatTest" controls-position="right" :step="1" size="mini" :min="1"></el-input-number>
-          </li>
+          </li> -->
           <li class="test-info">是否允许复制文本:
             <el-switch v-model="testData.permitCopy" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
           </li>
@@ -38,7 +38,7 @@
               <i class="el-icon-question"></i>
             </el-tooltip>
           </li>
-          <li>
+          <li class="fr">
             <el-button size="mini" type="primary" @click="submit()">保存试卷</el-button>
           </li>
           <li style="clear:both;"></li>

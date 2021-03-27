@@ -27,7 +27,7 @@
           <el-table-column  label="试卷名称">
 						<template slot-scope="scope">{{scope.row.examName}} </template>
           </el-table-column>
-          <el-table-column prop="enter_date" label="创建时间" width="180" sortable>
+          <el-table-column prop="enter_date" label="创建时间" width="240" sortable>
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.createDate }}</span>
@@ -39,8 +39,7 @@
           </el-table-column>
           <el-table-column prop="passMark" label="及格分数" width="110" sortable>
           </el-table-column>
-          <el-table-column prop="subjectName" label="试卷类型" width="100">
-          </el-table-column>
+          <!-- <el-table-column prop="subjectName" label="试卷类型" width="100"> </el-table-column> -->
           <el-table-column label="操作" width="240">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" plain @click="releaseTest(scope.row.examId,scope.row.examName)">发布考试</el-button>
@@ -104,6 +103,8 @@
 <script>
 import "../../assets/less/my_tab.less";
 import "../../assets/less/main/myTest.less";
+import {getFormatDate} from '@/utils/common.js';
+
 export default {
   name: "MyTest",
 
@@ -292,9 +293,9 @@ export default {
     //确定发布考试 -----向后端发送请求
     doReleaseTest() {
       //考试开始时间
-      var startDate = this.getFormatDate(new Date(this.releaseTestDate[0]));
+      var startDate = getFormatDate(new Date(this.releaseTestDate[0]));
       //考试结束时间
-      var deadline = this.getFormatDate(new Date(this.releaseTestDate[1]));
+      var deadline = getFormatDate(new Date(this.releaseTestDate[1]));
       //班级id
       var classesId = [];
       for (let i = 0; i < this.selectionClasses.length; i++) {

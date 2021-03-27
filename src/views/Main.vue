@@ -58,40 +58,37 @@ export default {
 
       menu:[],//侧导航栏数据
 
-      isSpread:true,//侧栏是否为展开状态
+      isSpread: true,//侧栏是否为展开状态
 
       isMenuHover:false,//鼠标是否移入侧栏
 
     };
   },
 
-  created(){
-    var user_status = this.$store.state.userRole;
-    if(user_status=="teacher"){
-      this.menu= this.$store.state.tchNav;
-    }else if(user_status=="student"){
-      this.menu= this.$store.state.stuNav;
-    }else{
-      this.$router.push("/Login")
-    }
-    
-    //渲染侧导航栏
-    for (let i = 0; i < this.menu.length; i++) {
-      if( this.menu[i].name.indexOf(this.$route.name) > -1){
-        this.activeName= this.menu[i].name;
-        break;
+  async created(){
+    this.$store.dispatch('getRole').then(res =>{
+      let user_status = res.role;
+      if(user_status == "teacher"){
+        this.menu= this.$store.state.tchNav;
+      }else if(user_status == "student"){
+        this.menu= this.$store.state.stuNav;
+      }else{
+        this.$router.push("/Login")
       }
-    }
+      
+      //渲染侧导航栏
+      for (let i = 0; i < this.menu.length; i++) {
+        if( this.menu[i].name.indexOf(this.$route.name) > -1){
+          this.activeName= this.menu[i].name;
+          break;
+        }
+      }
 
-    this.userName = this.$store.state.userName;
+      this.userName = this.$store.state.userName;
+    })
     // console.log(this.$route);
 
   },
-
-  mounted(){
-    this.spread()
-  },
-
 
   methods: {
     //路由跳转
@@ -119,7 +116,6 @@ export default {
     //退出登录
     loginOut(){
       localStorage.removeItem("_token")
-      localStorage.removeItem("user_status")
       localStorage.removeItem("user_name")
       sessionStorage.removeItem("openClassesSpace")
 
@@ -132,7 +128,6 @@ export default {
         this.packupStyle();
       }else{
         this.spreadStyle();
-
       }
       this.isSpread=!this.isSpread;
       

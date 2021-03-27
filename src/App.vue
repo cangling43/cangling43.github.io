@@ -49,6 +49,7 @@ body {
 #app {
   height: 100%;
   overflow: hidden;
+  letter-spacing:1px
 }
 button{
   background: #fff;

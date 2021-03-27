@@ -6,15 +6,17 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import api from './api/axios'
+import http from './api/axios'
 
+import api from '@/utils/api.js'
 import {formatSeconds} from '@/utils/common'
 import {role} from '@/utils/role'
 
 Vue.use(ElementUI);
 
-Vue.prototype.$http = api;
+Vue.prototype.$http = http;
 Vue.prototype.$role = role;
+Vue.prototype.$api = api;
 
 Vue.filter('formatSeconds',formatSeconds)
 

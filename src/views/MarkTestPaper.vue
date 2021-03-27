@@ -62,7 +62,6 @@
                       v-model="t.userAnswer" 
                       :label="item" 
                       :disabled="isRead">
-                        {{t.correctAnswer}}
                         {{String.fromCharCode(65+index)}}、{{ item }}
                       </el-radio>
                     </div>
