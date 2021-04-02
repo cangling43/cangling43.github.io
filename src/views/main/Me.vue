@@ -82,7 +82,7 @@ export default {
   methods: {
     // 获取用户信息
     async getUserData() {
-      const res = await this.$http.get(this.$api.user.getUserById, {})
+      const res = await this.$http.get(this.$api.user.getUserById)
       this.userData = res.data
 
       if(res.data.photo){

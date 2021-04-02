@@ -3,7 +3,7 @@ import ElementUI from 'element-ui';
 import router from '../router'
 import Vue from 'vue'
 
-const baseURL = 'http://localhost:8082'
+const baseURL = 'http://localhost:8081'
 Vue.prototype.$imageBaseUrl = baseURL+'/images/';
 
 const service = axios.create({
@@ -55,11 +55,6 @@ service.interceptors.response.use(
   },
   error => {
     let data = error.response.data
-    // Message({
-    //   message: data.msg,
-    //   type: 'error',
-    //   duration: 3 * 1000
-    // })
     return Promise.reject(data)
   }
 )

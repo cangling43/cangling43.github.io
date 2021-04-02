@@ -36,10 +36,7 @@ router.beforeEach((to, from, next) => {
       store.dispatch('getRole')
       next();
     }
-
-
   }
-  
 })
 
 

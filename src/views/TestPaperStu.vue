@@ -17,8 +17,7 @@
         <ul>
           <li class="user-info">所属班级: {{ testData.examClasses.classesName }}</li>
           <li class="user-info">答题人: {{ userName }}</li>
-          <!-- <li class="user-info">答题人Id: U{{ testData.userGrade.userId }}</li> -->
-          <li class="user-info" v-if="testData.userGrade.examStatus == 1 && testData.examClasses.publishScore == 1">得分: {{ testData.userGrade.grade + '分' }}</li>
+          <li class="user-info" v-if="finishTest && testData.examClasses.publishScore == 1">得分: {{ testData.userGrade.grade + '分' }}</li>
           <li class="user-info" v-else>剩余时间: {{ remainTime }}</li>
 
           <li class="fr">
@@ -32,7 +31,7 @@
           <li class="test-info"><strong class="testName">{{ testData.examName }}</strong></li>
           <li class="test-info">答题时间: {{ testData.time }} 分钟</li>
           <li class="test-info">截至时间: {{ testData.examClasses.deadline }}</li>
-          <li class="test-info" v-if="testData.userGrade.examStatus == 1 && testData.examClasses.publishScore == 1">得分: {{ testData.userGrade.grade + '分' }}</li>
+          <li class="test-info" v-if="finishTest && testData.examClasses.publishScore == 1">得分: {{ testData.userGrade.grade + '分' }}</li>
           <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>
           <!-- {{expendTime}} -->
           <li class="fr">
@@ -118,7 +117,7 @@
 
         <!-- 题目导航 -->
         <div class="topic-nav " :class="isFixed?'isFixed':''" :style="topic_nav_style">
-          <div class="topic-nav-describe" v-if="testData.userGrade.examStatus == 1 && testData.examClasses.publishAnswer == 1">
+          <div class="topic-nav-describe" v-if="finishTest && testData.examClasses.publishAnswer == 1">
             <span class="topic-nav-but correct"> </span> 正确
             <span class="space"></span>
             <span class="topic-nav-but error"> </span> 错误
@@ -190,7 +189,7 @@ export default {
       forbid_copy: false, //是否禁止复制文本
 
       isPublishAnswer: false, //是否公布答案
-
+      finishTest: false, //是否完成试卷
       //侧导航栏是否悬浮
       isFixed: false,
       topic_nav_style: "top:0px",
@@ -255,7 +254,7 @@ export default {
       this.$http.post('/submitTestPaper' ,request).then(res =>{
         if (res.code == 200) {
           this.$message.success(res.msg);
-          this.isRead = true
+          location.reload()
         }
       })
     },
@@ -277,8 +276,6 @@ export default {
 
     //处理试卷的题目数据
     processTestPaperData(testData) {
-
-
           /* 判断试卷是否允许复制文本 */
           if (testData.permitCopy == 0) {
             this.forbid_copy = true;
@@ -300,11 +297,14 @@ export default {
           });
 
           /* 判断用户是否已经完成试卷 */
-          if ( testData.userGrade.examStatus != 1) {
+
+          if ( !testData.userGrade ) {
             console.log("开始考试");
+            this.finishTest = false
             this.isRead = false;
           } else {
             console.log("查看试卷");
+            this.finishTest = true
             this.isRead = true;
             //处理用户答案数据
             testData.userTopicList.forEach((item, index) => {
@@ -317,20 +317,22 @@ export default {
               // console.log(item.userAnswer);
             });
             //根据题目id写入用户答案
+
+            /* 判断是否公布答案 */
+            if(testData.examClasses.publishAnswer == 1){
+              this.isPublishAnswer = true;
+              testData.topicTchDTOList.forEach((item, index) => {
+                //按换行符分割字符串
+                item.correctAnswer = item.correctAnswer.split(/[\n]/g);
+                //添加教师是否批改判断
+                item.status = testData.userTopicList[index].topicStatus;
+                //添加评改分数
+                item.userScore = testData.userTopicList[index].userScore;
+              });
+            }
           }
 
-          /* 判断是否公布答案 */
-          if(testData.examClasses.publishAnswer == 1){
-            this.isPublishAnswer = true;
-            testData.topicTchDTOList.forEach((item, index) => {
-              //按换行符分割字符串
-              item.correctAnswer = item.correctAnswer.split(/[\n]/g);
-              //添加教师是否批改判断
-              item.status = testData.userTopicList[index].topicStatus;
-              //添加评改分数
-              item.userScore = testData.userTopicList[index].userScore;
-            });
-          }
+          
 
           this.testData = testData;
           console.log("this.testData ==> ", this.testData);
@@ -342,7 +344,7 @@ export default {
           var deadlineDate = new Date(
             Date.parse(deadline.replace(/-/g, "/"))
           ).getTime();
-          if (nowDate < deadlineDate && testData.userGrade.examStatus != 1) {
+          if (nowDate < deadlineDate && this.finishTest === false) {
             //开始计时
             console.log('开始计时');
             this.remainTimer();
@@ -438,9 +440,8 @@ export default {
 
     //题目导航按钮颜色
     emptyAnswer(val) {
-      console.log(val);
       //已完成试卷 与 是否公布答案
-      if(this.testData.userGrade.examStatus == 1 && this.testData.examClasses.publishAnswer == 1){
+      if(this.finishTest === true && this.testData.examClasses.publishAnswer == 1){
         if(val.userScore == val.score){
           console.log(val);
           return "correct";
@@ -483,8 +484,7 @@ export default {
 
     //判断选择题是否回答正确
     isCheckboxCorrect(topic,val){
-      console.log(topic);
-      if(this.testData.userGrade.examStatus != 1 || this.testData.examClasses.publishAnswer != 1){
+      if(this.finishTest === false  || this.testData.examClasses.publishAnswer != 1){
         return ''
       }
       let is = false
