@@ -150,9 +150,9 @@
 </template>
 
 <script>
-import "../assets/less/testPaper.less";
-import testPaperMixin from "../mixins/testPaper-mixin";
-import "../assets/less/markTestPaper.less";
+import "@/assets/less/testPaper.less";
+import testPaperMixin from "@/mixins/testPaper-mixin";
+import "@/assets/less/markTestPaper.less";
 
 export default {
   name: "MarkTestPaper",

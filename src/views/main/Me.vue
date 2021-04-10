@@ -7,7 +7,7 @@
 			<div class="uploadPhoto">
 				<div class="title">上传头像 :</div>
 				<el-upload class="avatar-uploader" 
-				action="http://localhost:8082/upload" 
+				:action="actionURL" 
 				:headers="{ token }"
 				:file-list="fileList"
 				:limit="1"
@@ -70,7 +70,8 @@ export default {
 			imageUrl: '',
 			token: "",
 			fileList: [],
-      autoUpload: true
+      autoUpload: true,
+      actionURL: this.$baseURL+'/upload'
     };
   },
   created() {
@@ -95,6 +96,7 @@ export default {
     },
     //上传成功
     handleAvatarSuccess(res, file) {
+      this.$store.commit('setUserPhoto',res.data.fileUrl);
       this.imageUrl = URL.createObjectURL(file.raw);
       let params = {
         userId: this.userData.userId,
@@ -131,6 +133,7 @@ export default {
         this.$http.put(this.$api.user.userEdit,params).then(res =>{
           if(res.code === 200){
             this.$message.success('删除成功')
+            this.$store.commit('setUserPhoto',null);
           }
         })
       }

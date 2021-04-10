@@ -77,4 +77,11 @@ a{
   color: #333;
   text-decoration: none;
 }
+//表格居中
+.el-table{
+
+    .cell{
+        text-align: center;
+    }
+}
 </style>

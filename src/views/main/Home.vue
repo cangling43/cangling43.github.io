@@ -45,16 +45,10 @@ export default {
     };
   },
   created() {
-    this.aaa();
   },
   watch: {},
   methods: {
-    aaa() {
-      let params = {};
-      this.$http.get("/queryClassesList", { params }).then((res) => {
-        console.log(res);
-      });
-    },
+    
   },
 };
 </script>

@@ -5,15 +5,12 @@
       <span class="classesTitle">我加入的班级</span>
       <el-button type="primary" size="medium" icon="el-icon-plus" v-if="$role('teacher')" @click="createClassesDialog = true" class="createClasses">创建班级</el-button>
       <div class="enterClasses">
-        <el-input v-model="enterClasses_id" size="small" placeholder="请输入班级编号" prefix-icon="el-icon-search"></el-input>
-        <el-button type="primary" size="small" @click="joinClasses()">查询</el-button>
+        <el-input v-model="classesInfo" size="small" placeholder="请输入班级编号或者班级名称" prefix-icon="el-icon-search"></el-input>
+        <el-button type="primary" size="small" @click="getClasses(classesInfo)">查询</el-button>
       </div>
     </div>
 
-    <!-- <el-divider></el-divider> -->
-    <!-- 班级列表 -->
-
-    <div class="class-list">
+    <div class="class-list" v-loading="loading">
       <h4 v-if="tableData.length == 0">暂无参加的班级</h4>
       <div class="class-box" v-for="(item,index) in tableData" :key="index">
         <div class="title">
@@ -35,15 +32,20 @@
           </div>
         </div>
         <div class="title-but">
-          <el-button type="primary" @click="openPaper(item.classesId,item.classesName)">进入班级</el-button>
-          <el-button type="info" @click="editClassesBut(item)" plain v-if="$role('teacher')">设置</el-button>
-          <el-button type="danger" plain @click="outClasses(item.classesId)">
+          <el-button size="medium" type="primary" @click="openPaper(item.classesId,item.classesName)">进入班级</el-button>
+          <el-button size="medium" type="info" @click="editClassesBut(item)" plain v-if="$role('teacher')">设置</el-button>
+          <el-button size="medium" type="danger" plain @click="outClasses(item.classesId)">
             {{$role('teacher') ? '删除班级':'退出班级'}}
           </el-button>
         </div>
 
       </div>
     </div>
+
+    <div class="page">
+      <el-pagination  background layout="total, prev, pager, next,jumper"  @current-change="currentChange" :total="total" :page-size="pageSize"/>
+    </div>
+
 
     <!-- 创建班级对话框 -->
     <el-dialog title="创建班级" :visible.sync="createClassesDialog" width="42%">
@@ -119,7 +121,7 @@ export default {
       user_status: "",
 
       //申请加入班级的id
-      enterClasses_id: "",
+      classesInfo: "",
 
       //是否显示创建班级表单
       isCreateClasses: false,
@@ -180,6 +182,12 @@ export default {
       //侧导航栏是否悬浮
       isFixed: false,
       topic_nav_style: "top:0px",
+
+      currentPage: 1,
+      pageSize: 8,
+      total: null,
+
+      loading: false,
     };
   },
 
@@ -200,9 +208,27 @@ export default {
   methods: {
     //获取用户的班级列表
     getClasses() {
-      this.$http.get('/queryClassesList',{params:{}}).then( res =>{
-        this.tableData = res.data;
-      })
+      this.loading = true
+      let params = {
+        pageSize: this.pageSize,
+        currentPage: this.currentPage,
+        keyword: this.classesInfo
+      }
+      setTimeout(() => {
+        this.$http.get('/queryClassesList',{params}).then( res =>{
+          this.tableData = res.data.content;
+          this.total = res.data.total
+          this.loading = false
+        })
+      }, 500);
+      
+    },
+
+    //切换分页时触发
+    currentChange(val) {
+      console.log(val);
+      this.currentPage = val
+      this.getClasses()
     },
 
     //打开试卷页面
@@ -321,3 +347,14 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+.page{
+  margin: 24px 0 12px;
+  padding: 6px 24px;
+  padding-right: 48px;
+  background: #fafafa;
+  border-radius: 4px;
+  text-align: right;
+}
+</style>

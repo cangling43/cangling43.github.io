@@ -95,7 +95,7 @@ export default new Vuex.Store({
       // }
     ],
     userName: '',
-
+    userPhoto: '',
     userRole: 'student',
 
     joinWayType: [
@@ -106,15 +106,19 @@ export default new Vuex.Store({
   },
   mutations: {
     setUserName(state,data){
-      state.userName=data
+      state.userName = data
     },
 
     setUserRole(state,data){
-      state.userRole=data
+      state.userRole = data
     },
 
-    asideIsSpread(){
-      
+    setUserPhoto(state,data){
+      if(data){
+        state.userPhoto = Vue.prototype.$imageBaseUrl + data
+      }else{
+        state.userPhoto = null
+      }
     },
     setTestData(state,data){
       state.testData = data
@@ -124,8 +128,9 @@ export default new Vuex.Store({
   actions: {
     async getRole({commit ,state}){
       const res = await api.get("/getUserById",{})
-      commit('setUserRole',res.data.role)
-      commit('setUserName',res.data.userName)
+      commit('setUserRole', res.data.role)
+      commit('setUserName', res.data.userName)
+      commit('setUserPhoto',  res.data.photo)
       return res.data;
     }
   },

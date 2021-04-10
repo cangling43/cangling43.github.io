@@ -75,7 +75,7 @@ export const routes = [
         {
           path:"myTest",
           name:"MyTest",
-          component: () => import('../views/main/MyTest.vue'),
+          component: () => import('../views/myExam/MyTest.vue'),
           meta:{
             title:'我的试卷'
           },
@@ -106,28 +106,24 @@ export const routes = [
               component: () => import('../views/main/myMessage/Inboxes.vue'),
             }
           ]
-        },
-        {
-          path:"changeStatus",
-          name:"ChangeStatus",
-          component: () => import('../views/main/ChangeStatus.vue')
         }
       ]
     },
+
     {
       path: '/testPaperStu/:tp_id/:c_id',
       name: 'TestPaperStu',
-      component: () => import( '../views/TestPaperStu.vue')
+      component: () => import( '../views/testPaper/TestPaperStu.vue')
     },
     {
       path: '/testPaperTch/:tp_id?',
       name: 'TestPaperTch',
-      component: () => import( '../views/TestPaperTch.vue')
+      component: () => import( '../views/testPaper/TestPaperTch.vue')
     },
     {
       path: '/markTestPaper',
       name: 'MarkTestPaper',
-      component: () => import( '../views/MarkTestPaper.vue'),
+      component: () => import( '../views/testPaper/MarkTestPaper.vue'),
       meta:{
         title: '批改试卷'
     }

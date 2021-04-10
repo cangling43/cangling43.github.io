@@ -3,14 +3,17 @@
     <div class="header">
       <div class="logo" @click="goRouter('/main/home','Home')">考试汇</div>
       <div class="person" >
-        <div class="img"><img src="" alt=""></div>
+        <div class="img">
+          <template>
+            <img :src="$store.state.userPhoto || defaultPhoto" />
+          </template>
+        </div>
         <div class="name">{{$store.state.userName}}</div>
         <div class="dropdown" >
           <div class="item">个人中心</div>
           <div class="item">我的消息</div>
           <div class="item" v-if="$role('teacher')" @click="changeRole()">变更为学生身份</div>
           <div class="item" v-if="$role('student')" @click="changeRole()">变更为教师身份</div>
-          <div class="item">我的消息</div>
           <div class="item" @click="loginOut">退出登录</div>
         </div>
       </div>
@@ -45,6 +48,7 @@
 <script>
 import "../assets/font/iconfont.css"
 import "../assets/less/main.less"
+import defaultSrc from '../assets/images/defaultPhoto.png'
 export default {
   name: "Main",
 
@@ -62,6 +66,7 @@ export default {
 
       isMenuHover:false,//鼠标是否移入侧栏
 
+      defaultPhoto: defaultSrc,
     };
   },
 

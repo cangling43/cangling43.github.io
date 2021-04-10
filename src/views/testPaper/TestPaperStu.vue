@@ -157,8 +157,8 @@
 </template>
 
 <script type="text/javascript">
-import "../assets/less/testPaper.less";
-import testPaperMixin from "../mixins/testPaper-mixin";
+import "@/assets/less/testPaper.less";
+import testPaperMixin from "@/mixins/testPaper-mixin";
 
 export default {
   name: "TestPaperStu",
@@ -385,7 +385,7 @@ export default {
           this.$message("考试结束");
           this.submitTestpaper();
         }
-      }, 1000);
+      }, 500);
     },
 
     //格式化考试剩余时间

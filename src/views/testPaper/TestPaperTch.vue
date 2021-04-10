@@ -226,8 +226,8 @@
 </template>
 
 <script>
-import "../assets/less/testPaper.less";
-import testPaperMixin from "../mixins/testPaper-mixin";
+import "@/assets/less/testPaper.less";
+import testPaperMixin from "@/mixins/testPaper-mixin";
 
 export default {
   name: "TestPaperTch",

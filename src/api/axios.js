@@ -5,6 +5,7 @@ import Vue from 'vue'
 
 const baseURL = 'http://localhost:8081'
 Vue.prototype.$imageBaseUrl = baseURL+'/images/';
+Vue.prototype.$baseURL = baseURL;
 
 const service = axios.create({
   baseURL: baseURL,

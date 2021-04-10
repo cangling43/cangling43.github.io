@@ -9,7 +9,7 @@
     .list-header{
         position: relative;
         background: #fafafa;   
-        padding: 12px 24px;
+        padding: 6px 24px;
         border-radius: 4px;   
         height: 60px;
         box-sizing: border-box;
@@ -27,13 +27,7 @@
         background: #4788cc;
         color: #fff;
         border-color: #f6f6f6;
-        transition: 1s;
     }
-    .list-header .createClasses:hover{
-        background: #333;
-    }
- 
-
 
     .enterClasses{
         position: absolute;
@@ -61,8 +55,8 @@
     span.classesTitle{
         display: inline-block;
         margin-right: 30px;
-        font-size: 18px;
-        line-height: 36px;
+        font-size: 16px;
+        line-height: 48px;
     }
 
 
@@ -70,7 +64,6 @@
         display: flex;
         justify-content: flex-start;
         flex-wrap: wrap;
-        // background: #f4f4f4;  
         
         h4{
             width: 100%;
@@ -78,20 +71,15 @@
             color: #666;
         }
     }
-    .class-box:last-child{
-        // margin: 20px 0;
-    }
 
     .class-box{
-        // display: inline-block;
         position: relative;
-        width: 46%;
+        width: 48%;
         min-width: 600px;
-        min-height: 250px;
         background: #fafafa;
         border-radius: 6px;
-        padding: 0 24px;
-        margin: 24px 2% 0 2%;
+        padding: 0 12px;
+        margin: 24px 1% 0 1%;
         box-sizing: border-box;
         box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
 
@@ -99,8 +87,8 @@
             position: relative;
             display: flex;
             align-items: center;
-            padding: 16px 0px;
-            font-size: 18px;
+            padding: 12px 0px;
+            font-size: 16px;
         }
         .title .classNo{
             position: relative;
@@ -115,7 +103,7 @@
         }
         .title-but{
             position: absolute;
-            right: 48px;
+            right: 24px;
             top: 70px;
             width: 120px;
             display: flex;
@@ -142,6 +130,7 @@
         .info-item{
             padding: 10px 10px;
             margin-right: 12px;
+            font-size: 14px;
             p{
                 text-indent:2em;
                 margin-top: 10px;
@@ -161,23 +150,6 @@
     }
     
 }
-.table{
-    // width: 1120px;
-    margin: 0 auto;
-
-
-    .cell{
-        text-align: center;
-        font-size: 13px;
-    }
-    .operation{
-        float: left;
-    }
-    .el-table td, .el-table th{
-        padding: 12px 0;
-    }
-}
 .el-dialog__body{
     padding: 30px 50px;
-
 }
