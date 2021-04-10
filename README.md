@@ -29,10 +29,10 @@
 ![学生角色-我的班级](https://images.gitee.com/uploads/images/2021/0321/173532_e3e22c7f_7451960.png "snipaste20210321_173521.png")
 
 教师角色-班级空间
-![教师角色-班级空间](https://images.gitee.com/uploads/images/2021/0321/180543_de5e1faf_7451960.png "snipaste20210321_180524.png")
+![教师角色-班级空间](https://images.gitee.com/uploads/images/2021/0410/221614_6a8362ed_7451960.png "snipaste20210410_221408.png")
 
 学生角色-班级空间
-![学生角色-班级空间](https://images.gitee.com/uploads/images/2021/0321/180903_cb21ced6_7451960.png "snipaste20210321_180852.png")
+![学生角色-班级空间](https://images.gitee.com/uploads/images/2021/0410/221535_4be0db63_7451960.png "snipaste20210410_221322.png")
 
 教师角色-我的试卷
 ![教师角色-我的试卷](https://images.gitee.com/uploads/images/2021/0321/181730_e3863787_7451960.png "snipaste20210321_181720.png")
@@ -49,6 +49,8 @@
 学生角色-查看试卷
 ![学生角色-查看试卷](https://images.gitee.com/uploads/images/2021/0321/182601_9d5c4d0e_7451960.png "QQ截图20210321182542.png")
 
+个人中心
+![个人中心](https://images.gitee.com/uploads/images/2021/0410/221744_79d7b8f0_7451960.png "snipaste20210410_221450.png")
 
 #### 使用说明
 
