@@ -128,7 +128,6 @@ export default {
 
     //切换分页时触发
     currentChange(val) {
-      console.log(val);
       this.currentPage = val;
       this.getTestPaperList();
     },

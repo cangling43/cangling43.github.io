@@ -391,7 +391,6 @@ export default {
 
     //切换分页时触发
     currentChange(val) {
-      console.log(val);
       this.currentPage = val;
       switch(this.tab_classes){
         case 'test_list': this.getClassesTestPaper();break
@@ -445,6 +444,9 @@ export default {
 
     .tital {
       width: 30%;
+      h2{
+        margin-bottom: 10px;
+      }
     }
     .details {
       width: 70%;

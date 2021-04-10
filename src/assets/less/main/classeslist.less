@@ -2,10 +2,6 @@
     position: relative;
     padding: 12px 32px 24px 32px;
 
-    .el-button--primary{
-        background-color: #58aaff;
-    }
-    
     .list-header{
         position: relative;
         background: #fafafa;   
@@ -14,6 +10,36 @@
         height: 60px;
         box-sizing: border-box;
         box-shadow: 0 2px 4px 0 rgb(0 0 0 / 12%), 0 0 6px 0 rgb(0 0 0 / 4%);
+
+        span.classesTitle{
+            display: inline-block;
+            margin-right: 30px;
+            font-size: 16px;
+            line-height: 48px;
+        }
+    
+        .createClasses{
+            background: #4788cc;
+            color: #fff;
+            border-color: #f6f6f6;
+        }
+    
+        .enterClasses{
+            position: absolute;
+            right: 24px;
+            top: 14px;
+            width: 400px;
+            height: 40px;
+        }
+        .enterClasses .el-input{
+            width: 320px;
+            margin-right: 20px;
+        }
+        .enterClasses .el-button{
+            background: #4788cc;
+            border-color: #4788cc;
+            transition: 1s;
+        }
     }
     .list-header.isFixed{
         position: absolute;
@@ -21,42 +47,6 @@
         left: 32px;
         right: 32px;
         z-index: 999;
-    }
-
-    .list-header .createClasses{
-        background: #4788cc;
-        color: #fff;
-        border-color: #f6f6f6;
-    }
-
-    .enterClasses{
-        position: absolute;
-        right: 24px;
-        top: 14px;
-        width: 400px;
-        height: 40px;
-        // margin: 0 auto;
-
-    }
-    .enterClasses .el-input{
-        width: 320px;
-        margin-right: 20px;
-    }
-    .enterClasses .el-input.is-active .el-input__inner, .el-input__inner:focus{
-        border-color: #999;
-    }
-    .enterClasses .el-button{
-        background: #4788cc;
-        border-color: #4788cc;
-        transition: 1s;
-    }
-
-
-    span.classesTitle{
-        display: inline-block;
-        margin-right: 30px;
-        font-size: 16px;
-        line-height: 48px;
     }
 
 
@@ -71,7 +61,6 @@
             color: #666;
         }
     }
-
     .class-box{
         position: relative;
         width: 48%;
@@ -148,8 +137,9 @@
             padding: 10px 10px;
         }
     }
+    .el-dialog__body{
+        padding: 30px 50px;
+    }
     
 }
-.el-dialog__body{
-    padding: 30px 50px;
-}
+
