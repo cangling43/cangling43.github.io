@@ -9,6 +9,11 @@
 - 前端采用vue框架，搭配vue-cli、axios、vuex、element-ui组件库。
 - 后端采用springBoot框架、jwt、swagger、持久层mybatis，mysql数据库。
 
+#### 环境运行
+- node.js v14.6.0
+- jdk 1.8
+- mysql 8.0.22
+
 #### 源码地址
 | 前端网址  |  后端网址 |
 |---|---|
@@ -35,7 +40,7 @@
 ![学生角色-班级空间](https://images.gitee.com/uploads/images/2021/0410/221535_4be0db63_7451960.png "snipaste20210410_221322.png")
 
 教师角色-我的试卷
-![教师角色-我的试卷](https://images.gitee.com/uploads/images/2021/0321/181730_e3863787_7451960.png "snipaste20210321_181720.png")
+![我的试卷](https://images.gitee.com/uploads/images/2021/0410/222018_e33d5c18_7451960.png "我的试卷.png")
 
 教师角色-新增试卷
 ![教师角色-新增试卷](https://images.gitee.com/uploads/images/2021/0321/183312_3fdbf5bc_7451960.png "QQ截图20210321183224.png")
