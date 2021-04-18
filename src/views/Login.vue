@@ -66,7 +66,6 @@ export default {
                 var data = res.data;
                 //登录成功跳转
                 localStorage.setItem('_token', data.token);
-                localStorage.setItem('user_name', data.name);
                 this.goRouter({name:"Home"})
               }
             })        

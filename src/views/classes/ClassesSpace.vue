@@ -1,6 +1,6 @@
 <template>
   <div class="classesSpace">
-    <div class="classesInfo">
+    <div class="classesInfo" v-loading="loading">
       <div class="tital">
         <h2>C{{ classesData.classesId }}&nbsp;&nbsp; {{ classesData.classesName }} </h2>
         <span class="editClasses" @click="editClasses">修改班级信息<i class="el-icon-edit"></i></span>
@@ -8,13 +8,13 @@
 
       <div class="details">
         <ul>
-          <li class="item"> 创建时间 : {{ classesData.createDate }} </li>
-          <li class="item"> 创建者 : {{ classesData.creatorName }} </li>
-          <li class="item"> 班级人数 : {{ classesData.peopleNum }} 人 </li>
-          <li class="item joinWay"> 允许加入方式 : {{ classesData.joinway | joinWay(that) }} </li>
+          <li class="item"> <span class="key">创建时间：</span> {{ classesData.createDate }} </li>
+          <li class="item"> <span class="key">创建者：</span> {{ classesData.creatorName }} </li>
+          <li class="item"> <span class="key">班级人数：</span> {{ classesData.peopleNum }} 人 </li>
+          <li class="item joinWay"> <span class="key">允许加入方式：</span> {{ classesData.joinway | joinTayType }} </li>
         </ul>
         <div class="title" @click="isopenIntroduction=!isopenIntroduction">
-          班级简介 :{{ classesData.introduction }}
+          <span class="key">班级简介：</span>{{ classesData.introduction }}
         </div>
       </div>
     </div>
@@ -91,47 +91,40 @@
       <el-pagination background layout="total, prev, pager, next,jumper" @current-change="currentChange" :current-page.sync="currentPage" :total="total" :page-size="pageSize" />
     </div>
 
+    <!-- 修改试卷发布设置 -->
     <ReleaseUpdate ref="releaseUpdate" @success="getClassesTestPaper()" />
 
+    <!-- 修改班级 -->
+    <EditClasses ref="EditClasses" @success="getClassesData()" />
   </div>
 </template>
 
 <script>
 import ReleaseUpdate from "./components/ReleaseUpdate";
+import EditClasses from './components/EditClasses'
+
 
 export default {
   name: "ClassesSpace",
-  components: { ReleaseUpdate },
+  components: { ReleaseUpdate, EditClasses },
+  watch: {
+    //监听params参数的变化
+    $route: {
+      handler() {
+        this.Classes_id = this.$route.params.id;
+        this.getClassesData();
+      },
+      deep: true,
+    },
+  },
   data() {
     return {
       Classes_id: "班级不存在",
+      classesData: {},//当前班级数据
+      TestData: [],//试卷信息数据
+      userData: [],//班级其他成员数据
 
-      //用户当前身份
-      user_status: "student",
-
-      //当前班级数据
-      classesData: {},
-
-      //是否打开班级简介
-      isopenIntroduction: false,
-
-      //修改班级信息的数据
-      editClassesData: {
-        name: "",
-        joinWay: "all",
-        introduction: "",
-      },
-
-      //
       tab_classes: "test_list",
-
-      //试卷信息数据
-      TestData: [],
-
-      //班级其他成员数据
-      userData: [],
-
-      that: this,
 
       // 分页
       currentPage: 1,
@@ -141,20 +134,10 @@ export default {
       loading: false,
     };
   },
-  filters: {
-    joinWay(val, that) {
-      let item = that.$store.state.joinWayType.find((item) => (item.key = val));
-      return item ? item.value : val;
-    },
-  },
-  created() {
-    // console.log(this.$route.params.id);
+  async mounted() {
     this.Classes_id = this.$route.params.id;
-    // this.user_id=this.$root.user_id
-    this.user_id = localStorage.getItem("user_id");
-    this.user_status = localStorage.getItem("user_status");
-    this.getClassesData();
-    this.getClassesTestPaper();
+    await this.getClassesData();
+    await this.getClassesTestPaper();
   },
 
   methods: {
@@ -167,12 +150,17 @@ export default {
 
     //获取班级信息
     getClassesData() {
+      this.loading = true
       let params = {
         classesId: this.$route.params.id,
       };
-      this.$http.get("/queryClasses", { params }).then((res) => {
-        this.classesData = res.data;
-      });
+      setTimeout(() => {
+        this.$http.get("/queryClasses", { params }).then((res) => {
+          this.classesData = res.data;
+          this.loading = false
+        });
+      }, 400);
+      
     },
 
     //获取班级成员信息
@@ -199,14 +187,13 @@ export default {
     //获取班级试卷信息
     getClassesTestPaper() {
       this.loading = true
-      this.tab_classes = "test_list";
       let params = {
         classesId: this.$route.params.id,
         pageSize: this.pageSize,
         currentPage: this.currentPage,
       };
       setTimeout(() => {
-              this.$http.get("/getExamByClasses", { params }).then((res) => {
+        this.$http.get("/getExamByClasses", { params }).then((res) => {
         if (res.code === 200) {
           var data = res.data.content;
           //处理数据
@@ -260,63 +247,9 @@ export default {
 
     //修改班级信息
     editClasses() {
-      this.isopenIntroduction = true;
-      if (this.isEditClasses) {
-        var classes = this.classesData.classes;
-        //判断用户是否改变数据
-        if (
-          this.editClassesData.name == classes.name &&
-          this.editClassesData.joinWay == classes.joinWay &&
-          this.editClassesData.introduction == classes.introduction
-        ) {
-          console.log("数据没有改变");
-        } else {
-          //处理班级加入方式
-          var joinWay = "";
-          if (this.editClassesData.joinWay == "允许任何人加入") {
-            joinWay = "all";
-          }
-          if (this.editClassesData.joinWay == "需要管理员同意申请") {
-            joinWay = "apply";
-          }
-          if (this.editClassesData.joinWay == "不允许任何人加入") {
-            joinWay = "no";
-          }
-
-          // 处理post请求参数
-          var request = {
-            token: localStorage.getItem("_token"),
-            c_id: classes.c_id,
-            name: this.editClassesData.name,
-            joinWay: joinWay,
-            introduction: this.editClassesData.introduction,
-            people_num: classes.people_num,
-          };
-          request = this.$qs.stringify(request);
-
-          //修改班级信息
-          this.$axios({
-            method: "post",
-            url: "/updateClasses",
-            data: request,
-          })
-            .then((result) => {
-              console.log("register -> result", result);
-              if (result.data.code == 200) {
-                this.$message.success("修改成功!");
-                this.getClassesData();
-              } else {
-                this.$message(result.data.msg);
-              }
-            })
-            .catch((err) => {
-              console.log("err ==> ", err);
-              this.$message(result.data.msg);
-            });
-        }
-      }
-
-      this.isEditClasses = !this.isEditClasses;
+      this.$refs.EditClasses.dialog = true  
+      console.log(this.classesData);
+      this.$refs.EditClasses.editClassesData = JSON.parse(JSON.stringify(this.classesData))  
     },
 
     //把学生踢出班级
@@ -399,16 +332,7 @@ export default {
     },
   },
 
-  watch: {
-    //监听params参数的变化
-    $route: {
-      handler() {
-        this.Classes_id = this.$route.params.id;
-        this.getClassesData();
-      },
-      deep: true,
-    },
-  },
+
 };
 </script>
 
@@ -447,6 +371,9 @@ export default {
       h2{
         margin-bottom: 10px;
       }
+      .editClasses {
+        cursor: pointer;
+      }
     }
     .details {
       width: 70%;
@@ -460,14 +387,9 @@ export default {
     ul li {
       padding-right: 24px;
     }
-  }
-  .page{
-    margin: 24px 0 12px;
-    padding: 6px 24px;
-    padding-right: 48px;
-    background: #fafafa;
-    border-radius: 4px;
-    text-align: right;
+    span.key{
+      color: #606266;
+    }
   }
 }
 </style>

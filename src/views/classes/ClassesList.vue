@@ -2,7 +2,8 @@
   <div class="classesList">
 
     <div class="list-header" :class="isFixed?'isFixed':''" :style="topic_nav_style">
-      <span class="classesTitle">我加入的班级</span>
+      <span v-if="$role('teacher')" class="classesTitle">我创建的班级</span>
+      <span v-else class="classesTitle">我加入的班级</span>
       <el-button type="primary" size="medium" icon="el-icon-plus" v-if="$role('teacher')" @click="createClasses()" class="createClasses">创建班级</el-button>
       <div class="enterClasses">
         <el-input v-model="classesKeyword" size="small" placeholder="请输入班级编号或者班级名称" prefix-icon="el-icon-search"></el-input>
@@ -24,7 +25,7 @@
             <div class="info-item">班级人数 : {{item.peopleNum}} 人</div>
           </div>
           <div class="info-row">
-            <div class="info-item">加入限制 : {{item.joinway}}</div>
+            <div class="info-item">加入限制 : {{item.joinway | joinTayType}}</div>
             <div class="info-item creator">创建者 : {{item.creatorName}}</div>
           </div>
 
@@ -166,7 +167,6 @@ export default {
       // let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
       let scrollTop = document.getElementsByClassName("tab-item")[0].scrollTop;
 
-      console.log();
       if (scrollTop > 1) {
         this.topic_nav_style = "top:" + (scrollTop + 10) + "px";
         this.isFixed = true;
@@ -180,12 +180,5 @@ export default {
 </script>
 
 <style lang="less">
-.page{
-  margin: 24px 0 12px;
-  padding: 6px 24px;
-  padding-right: 48px;
-  background: #fafafa;
-  border-radius: 4px;
-  text-align: right;
-}
+
 </style>

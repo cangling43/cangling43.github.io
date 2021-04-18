@@ -37,8 +37,9 @@
           <el-table-column label="操作" width="240">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" plain @click="releaseTest(scope.row.examId,scope.row.examName)">发布考试</el-button>
-              <el-button type="info" size="mini" plain @click="editTestPaper(scope.row.examId)">编辑</el-button>
-              <el-button type="danger" size="mini" plain @click="deleteTest(scope.row.examId)">删除</el-button>
+              <el-button v-if="scope.row.releasing === 0" type="info" size="mini" plain @click="editTestPaper(scope.row.examId)">编辑</el-button>
+              <el-button v-if="scope.row.releasing === 0" type="danger" size="mini" plain @click="deleteTest(scope.row.examId)">删除</el-button>
+              <el-button v-if="scope.row.releasing === 1" type="info" size="mini" plain @click="editTestPaper(scope.row.examId)">查看试卷</el-button>
             </template>
           </el-table-column>
 
@@ -66,11 +67,12 @@ export default {
   data() {
     return {
       loading: true,
-      //所有的试卷列表
-      testPaperList: [],
+      
+      testPaperList: [],// 所有的试卷列表
 
+      // 分页
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       total: null,
 
       keyword: '',
@@ -97,15 +99,14 @@ export default {
           this.loading = false
         });
       }, 500);
-      
     },
 
     //去创建新试卷
     createTestPaper() {
       const { href } = this.$router.resolve({
-        name: "TestPaperTch",
+        name: "createExam",
+        params: { type: 'add'}
       });
-      console.log(href);
       window.open(href, "_blank");
     },
 
@@ -117,10 +118,10 @@ export default {
     // 编辑试卷
     editTestPaper(tp_id) {
       const { href } = this.$router.resolve({
-        name: "TestPaperTch",
+        name: "editExam",
+        params: { type: 'edit', tp_id}
       });
-      console.log(href);
-      window.open(href + "/" + tp_id, "_blank");
+      window.open(href, "_blank");
     },
 
     //删除试卷
@@ -198,13 +199,5 @@ export default {
     border-color: #4788cc;
     transition: 1s;
   }
-}
-.page {
-  margin: 24px 0 12px;
-  padding: 6px 24px;
-  padding-right: 48px;
-  background: #fafafa;
-  border-radius: 4px;
-  text-align: right;
 }
 </style>

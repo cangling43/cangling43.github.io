@@ -112,6 +112,7 @@ export default {
         if(res.code == 200){
           this.$message.success('变更身份成功')
           // this.$router.push("/main/home")
+          localStorage.setItem('_token', res.data.token);
           this.$router.go(0)
         }
       })
@@ -121,7 +122,6 @@ export default {
     //退出登录
     loginOut(){
       localStorage.removeItem("_token")
-      localStorage.removeItem("user_name")
       sessionStorage.removeItem("openClassesSpace")
 
       this.$router.push({name:"Login"})

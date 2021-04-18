@@ -15,7 +15,8 @@
 
         <ul class="home-header">
           <li>个人资料</li>
-          <li>创建班级</li>
+          <li v-if="$role('teacher')">创建班级</li>
+          <li v-if="$role('student')">我参加过的考试</li>
           <li>我的班级</li>
           <li>我的试卷</li>
         </ul>

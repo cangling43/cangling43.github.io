@@ -84,4 +84,12 @@ a{
         text-align: center;
     }
 }
+.page{
+  margin: 16px 0 12px;
+  padding: 6px 24px;
+  padding-right: 48px;
+  background: #fafafa;
+  border-radius: 4px;
+  text-align: right;
+}
 </style>

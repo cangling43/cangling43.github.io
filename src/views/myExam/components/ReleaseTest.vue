@@ -90,6 +90,7 @@ export default {
     //弹出发布考试对话框,用户选择班级与时间
     async releaseTest(tp_id, examName) {
       this.dialog = true;
+      this.currentPage = 1
       this.examName = "发布试卷名称: " + examName;
       this.examId = tp_id;
 
@@ -265,25 +266,28 @@ export default {
 };
 </script>
 
-<style>
-.releaseTest .el-dialog .pagination{
-  text-align: center;
-  margin-top: 6px;
-}
-.releaseTest .el-dialog .el-date-editor{
-  margin: 0;
-  margin-top: 24px;
-}
-.el-dialog__body{
+<style lang="less">
+.releaseTest{
+  .el-dialog .pagination{
     text-align: center;
-}
-.el-dialog__body .el-switch{
-    display: block;
-    margin: 24px 0;
+    margin-top: 6px;
+  }
+  .el-dialog .el-date-editor{
+    margin: 0;
+    margin-top: 24px;
+  }
+  .el-dialog__body{
+      text-align: center;
+  }
+  .el-dialog__body .el-switch{
+      display: block;
+      margin: 24px 0;
+  }
+
+  .el-divider--horizontal{
+      background-color: #444;
+      margin: 14px 0s;
+  }
 }
 
-.el-divider--horizontal{
-    background-color: #444;
-    margin: 14px 0s;
-}
 </style>

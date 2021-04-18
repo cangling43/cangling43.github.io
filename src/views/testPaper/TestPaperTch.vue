@@ -39,7 +39,8 @@
             </el-tooltip>
           </li>
           <li class="fr">
-            <el-button size="mini" type="primary" @click="submit()">保存试卷</el-button>
+            <el-button v-if="testData.releasing === 0 || params.type === 'add'" size="mini" type="primary" @click="submit()">保存试卷</el-button>
+            <el-button v-else size="mini" type="primary" @click="copy()">复制试卷</el-button>
           </li>
           <li style="clear:both;"></li>
         </ul>
@@ -280,6 +281,9 @@ export default {
   },
 
   computed: {
+    params() {
+      return this.$route.params
+    },
     //试卷总分
     totalScore() {
       var score = 0;
@@ -303,14 +307,14 @@ export default {
   },
 
   created() {
-    // console.log(this.sortedTopics);
-    var examId = this.$route.params.tp_id;
-    // 如果试卷id存在,则为编辑试卷
-    if (typeof examId != "undefined") {
+    let type = this.$route.params.type;
+    if(type === "add"){
+
+    }
+    if(type === "edit"){
       this.getTestPaper();
     }
-    // this.testData.creatorId = localStorage.getItem("user_id");
-    // this.userData.id = localStorage.getItem("user_id");
+    
   },
 
   mounted() {
@@ -319,6 +323,15 @@ export default {
   },
 
   methods: {
+    // 复制试卷
+    copy(){
+      this.testData.examName = '点击编辑试卷名称'
+      this.$router.push({
+        name: 'createExam',
+        params: {type: 'add', data: this.testData}
+      })
+      this.$message.success('复制成功');
+    },
     //提交试卷
     submit() {
       /*  处理题目信息 */
@@ -369,7 +382,7 @@ export default {
         ...testData,
       };
 
-      if (testData.examId != -1) {
+      if (this.params.type === 'edit') {
         var url = "/updateTestPaper";
       } else {
         var url = "/createTestPaper";

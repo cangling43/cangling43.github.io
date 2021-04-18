@@ -113,12 +113,23 @@ export const routes = [
     {
       path: '/testPaperStu/:tp_id/:c_id',
       name: 'TestPaperStu',
-      component: () => import( '../views/testPaper/TestPaperStu.vue')
+      component: () => import( '../views/testPaper/TestPaperStu.vue'),
     },
     {
-      path: '/testPaperTch/:tp_id?',
-      name: 'TestPaperTch',
-      component: () => import( '../views/testPaper/TestPaperTch.vue')
+      path: '/testPaperTch/:type',
+      name: 'createExam',
+      component: () => import( '../views/testPaper/TestPaperTch.vue'),
+      meta:{
+        title:'新建试卷'
+      },
+    },
+    {
+      path: '/testPaperTch/:type/:tp_id',
+      name: 'editExam',
+      component: () => import( '../views/testPaper/TestPaperTch.vue'),
+      meta:{
+        title:'修改试卷'
+      },
     },
     {
       path: '/markTestPaper',

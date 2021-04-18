@@ -2,23 +2,21 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
 import http from './api/axios'
-
 import api from '@/utils/api.js'
-import {formatSeconds} from '@/utils/common'
-import {role} from '@/utils/role'
+import { role } from '@/utils/role'
+import filters from '@/filters'
+import Echarts from 'echarts'
+
 
 Vue.use(ElementUI);
+Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
 
 Vue.prototype.$http = http;
 Vue.prototype.$role = role;
 Vue.prototype.$api = api;
-
-Vue.filter('formatSeconds',formatSeconds)
 
 //全局前置守卫 
 router.beforeEach((to, from, next) => {
@@ -41,10 +39,8 @@ router.beforeEach((to, from, next) => {
 
 
 Vue.config.productionTip = false;
-
 new Vue({
   router,
   store,
-  
   render: h => h(App)
 }).$mount('#app')

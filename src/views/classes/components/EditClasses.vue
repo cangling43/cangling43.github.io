@@ -6,7 +6,7 @@
         <el-form-item label="班级的名称" prop="name">
           <el-input v-model="editClassesData.classesName" size="small" placeholder="请输入班级名称"></el-input>
         </el-form-item>
-        <el-form-item label="班级允许的加入方式">
+        <el-form-item label="班级允许的加入方式" prop="joinway">
           <el-select v-model="editClassesData.joinway" placeholder="请选择" size="small">
             <el-option v-for="item in joinWayType" :key="item.key" :label="item.value" :value="item.key" />
           </el-select>
