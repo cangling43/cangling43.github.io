@@ -3,7 +3,7 @@ import ElementUI from 'element-ui';
 import router from '../router'
 import Vue from 'vue'
 
-const baseURL = 'http://localhost:8081'
+const baseURL = 'http://60.205.137.48:32857'
 Vue.prototype.$imageBaseUrl = baseURL+'/images/';
 Vue.prototype.$baseURL = baseURL;
 
