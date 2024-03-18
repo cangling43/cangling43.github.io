@@ -2,17 +2,6 @@
   <div class="home">
     <TopTab title="首页">
       <div class="tab-content">
-        <div class="home-introduce">
-          <div>
-            <p>欢迎来到考试汇</p>
-            <p>这是一款基于前后端分离的线上考试系统</p>
-            <p>前端采用vue框架，搭配vue-cli、axios、vuex、element-ui组件库。后端采用springBoot框架、jwt、swagger、持久层mybatis，mysql数据库。</p>
-            <p>在这里你可以切换两种不同的身份，从而使用两种不同的身份</p>
-            <p>开始探索吧~</p>
-            <p><a href="https://gitee.com/tatata1124">gitbit网站: https://gitee.com/tatata1124</a></p>
-          </div>
-        </div>
-
         <ul class="home-header">
           <li @click="me">个人资料</li>
           <template v-if="$role('student')">
@@ -25,10 +14,6 @@
             <li @click="createExam">创建试卷</li>
             <li @click="myClasses">我的班级</li>
           </template>
-        </ul>
-        <ul class="home-content">
-          <li class="myMessage">暂无消息通知</li>
-          <li class="more">功能开发中,敬请期待</li>
         </ul>
       </div>
     </TopTab>
