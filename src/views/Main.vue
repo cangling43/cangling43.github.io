@@ -23,7 +23,7 @@
     <div class="main">
       <div  class="aside" ref="aside" >
         <div class="menu"  @mouseenter="menuEnter" @mouseleave="menuOut">
-          <div class="menu-item" v-for="(item ,index) in menu" :key="index" ref="menu_item" @click="goRouter(item.path,item.name)" :class="activeName==item.name ? 'active':''">
+          <div class="menu-item" v-for="(item ,index) in menu" :key="index" ref="menu_item" @click="goRouter(item.path,item.name)" :class="activeName == item.name ? 'active':''">
             <i :class="item.i" ></i>  
             <span v-if="isSpread||isMenuHover">{{item.title}}</span> 
           </div>
@@ -49,14 +49,13 @@
 import "../assets/font/iconfont.css"
 import "../assets/less/main.less"
 import defaultSrc from '../assets/images/defaultPhoto.png'
+import { mapState, mapMutations } from 'vuex';
+
 export default {
   name: "Main",
-
+  inject:['reload'],
   data() {
     return {
-      activeName: "Home",
-
-      userName: '未登录',//用户名称
 
       userData:[],//用户数据
 
@@ -69,39 +68,39 @@ export default {
       defaultPhoto: defaultSrc,
     };
   },
+  computed: {
+    ...mapState(['activeName','tchNav','stuNav','userName','userRole'])
+  },
 
   async created(){
-    this.$store.dispatch('getRole').then(res =>{
-      let user_status = res.role;
-      if(user_status == "teacher"){
-        this.menu= this.$store.state.tchNav;
-      }else if(user_status == "student"){
-        this.menu= this.$store.state.stuNav;
-      }else{
-        this.$router.push("/Login")
-      }
-      
-      //渲染侧导航栏
-      for (let i = 0; i < this.menu.length; i++) {
-        if( this.menu[i].name.indexOf(this.$route.name) > -1){
-          this.activeName= this.menu[i].name;
-          break;
-        }
-      }
+    if(this.userRole == "teacher"){
+      this.menu = this.tchNav;
+    }else if(this.userRole == "student"){
+      this.menu = this.stuNav;
+    }else{
+      this.$router.push("/Login")
+    }
 
-      this.userName = this.$store.state.userName;
-    })
-    // console.log(this.$route);
+    // 渲染侧导航栏
+    for (let i = 0; i < this.menu.length; i++) {
+      if( this.menu[i].name.indexOf(this.$route.name) > -1){
+        // console.log(this.menu[i].name);
+        this.setActiveName(this.menu[i].name)
+        break;
+      }
+    }
 
   },
 
   methods: {
+    ...mapMutations(['setActiveName']),
+
     //路由跳转
     goRouter(path,name){
       if(this.activeName==name){
         return
       }
-      this.activeName=name
+      this.setActiveName(name)
       this.$router.push(path)
 
     },
@@ -113,12 +112,15 @@ export default {
           this.$message.success('变更身份成功')
           // this.$router.push("/main/home")
           localStorage.setItem('_token', res.data.token);
-          this.$router.go(0)
+          // this.$router.go(0)
+          this.$router.push({
+            name: 'Home'
+          })
+          this.reload()
         }
       })
     },
    
-
     //退出登录
     loginOut(){
       localStorage.removeItem("_token")
@@ -169,9 +171,6 @@ export default {
     },
     /* 侧栏收起与展开事件  end */
     
-
-
-
   },
 
  

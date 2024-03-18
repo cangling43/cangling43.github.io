@@ -18,8 +18,23 @@
           <el-table-column label="试卷编号" width="110">
             <template slot-scope="scope">E{{scope.row.examId}} </template>
           </el-table-column>
-          <el-table-column label="试卷名称">
+          <el-table-column label="试卷名称" min-width="220">
             <template slot-scope="scope">{{scope.row.examName}} </template>
+          </el-table-column>
+          <el-table-column prop="topicNum" label="题目数量" width="110">
+          </el-table-column>
+          <el-table-column label="是否打乱题目顺序" width="150">
+            <template slot-scope="scope">{{scope.row.disruptOrder === 1 ? '是':'否'}} </template>
+          </el-table-column>
+          <el-table-column label="允许页面切换次数" width="150">
+            <template slot-scope="scope">{{scope.row.switchPage === -1 ? '--':scope.row.switchPage}} </template>
+          </el-table-column>
+          <el-table-column label="是否自动评改" width="150">
+            <template slot-scope="scope">{{scope.row.autoMack === 1 ? '是':'否'}} </template>
+          </el-table-column>
+          <el-table-column prop="totalScore" label="总分" width="110">
+          </el-table-column>
+          <el-table-column prop="passMark" label="及格分数" width="110">
           </el-table-column>
           <el-table-column prop="enter_date" label="更新时间" width="240">
             <template slot-scope="scope">
@@ -27,14 +42,8 @@
               <span style="margin-left: 10px">{{ scope.row.createDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="topicNum" label="题目数量" width="110">
-          </el-table-column>
-          <el-table-column prop="totalScore" label="总分" width="110">
-          </el-table-column>
-          <el-table-column prop="passMark" label="及格分数" width="110">
-          </el-table-column>
           <!-- <el-table-column prop="subjectName" label="试卷类型" width="100"> </el-table-column> -->
-          <el-table-column label="操作" width="240">
+          <el-table-column label="操作" width="240" fixed="right">
             <template slot-scope="scope">
               <el-button type="primary" size="mini" plain @click="releaseTest(scope.row.examId,scope.row.examName)">发布考试</el-button>
               <el-button v-if="scope.row.releasing === 0" type="info" size="mini" plain @click="editTestPaper(scope.row.examId)">编辑</el-button>
@@ -125,7 +134,9 @@ export default {
     },
 
     //删除试卷
-    deleteTest(tp_id) {},
+    deleteTest(tp_id) {
+      
+    },
 
     //切换分页时触发
     currentChange(val) {
@@ -136,7 +147,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .myTest{
   .tab-item{
       padding: 10px 20px;

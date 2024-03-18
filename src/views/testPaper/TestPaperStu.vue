@@ -51,7 +51,8 @@
                 <div class="_location"></div>
                 <!-- 题目 -->
                 <div class="question" :class="forbid_copy? 'forbid_copy':''">
-                  <span class="question_nunber">{{ topicNavIndex_mixin(topics.topicType,index) }}、</span>
+                  <span class="required-symbol" v-if="t.required == 1">*</span>
+                  <span class="question_nunber">{{ t.index }}、</span>
                   {{ t.question }}
                   <span class="score">({{ t.score }}分)</span>
                 </div>
@@ -180,13 +181,13 @@ export default {
         examClasses:{},
         userGrade:{}
       },
-
       examClassesData: {},
 
       remainTime: "00:00:00", //考试剩余时间
       expendTime: 0, //考试用时(秒)
       isRead: false, //是否为只读模式
       forbid_copy: false, //是否禁止复制文本
+      switchPage: 0,
 
       isPublishAnswer: false, //是否公布答案
       finishTest: false, //是否完成试卷
@@ -210,8 +211,8 @@ export default {
   },
 
   mounted() {
-    // 监听滚动事件，然后用handleScroll这个方法进行相应的处理
     window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("visibilitychange", this.visibilitychange);
   },
 
   methods: {
@@ -220,7 +221,15 @@ export default {
       var topic = [];
       console.log(this.testData.topicTchDTOList);
       for (let i = 0; i < this.testData.topicTchDTOList.length; i++) {
-        var item = this.testData.topicTchDTOList[i];
+        var item = JSON.parse(JSON.stringify(this.testData.topicTchDTOList[i]))
+        // 判断是否必填
+        if(item.required === 1){
+          console.log(item);
+          if(item.userAnswer === null || item.userAnswer.length === 0){
+            this.$message.warning(`第${item.index}题目未选答案`);
+            return
+          }
+        }
         //处理多选/填空答案
         if (item.topicType == 1 || item.topicType == 3) {
           if (item.userAnswer instanceof Array) {
@@ -362,8 +371,17 @@ export default {
           //按题目类型分类并保存
           var topics = this.testData.topicTchDTOList;
           var topicsIndex = 1;
-          for (let i = 0; i < topics.length; i++) {
-            for (let item of this.sortedTopics) {
+          // for (let i = 0; i < topics.length; i++) {
+          //   for (let item of this.sortedTopics) {
+          //     if (topics[i].topicType == item.topicType) {
+          //       //添加
+          //       topics[i].index = topicsIndex++;
+          //       item.topic_content.push(topics[i]);
+          //     }
+          //   }
+          // }
+          for (let item of this.sortedTopics) {
+            for (let i = 0; i < topics.length; i++) {
               if (topics[i].topicType == item.topicType) {
                 //添加
                 topics[i].index = topicsIndex++;
@@ -385,7 +403,7 @@ export default {
           this.$message("考试结束");
           this.submitTestpaper();
         }
-      }, 500);
+      }, 1000);
     },
 
     //格式化考试剩余时间
@@ -426,6 +444,30 @@ export default {
         this.isFixed = true;
       } else {
         this.isFixed = false;
+      }
+    },
+
+    visibilitychange(){
+      if(this.testData.switchPage === -1){
+        return
+      }
+      if (document.visibilityState == "visible") {
+        console.log('页面回来了',this.switchPage);
+      }
+      if (document.visibilityState == "hidden") {
+        this.switchPage += 1;
+        
+        if(this.switchPage >= this.testData.switchPage){
+          console.log('提交试卷');
+          this.submitTestpaper();
+        }else{
+          this.$msgbox({
+            title: '警告',
+            type: 'warning',
+            message: '页面已被切换，如果次数为0将会自动提交试卷！ 剩余可以切换次数：' + (this.testData.switchPage-this.switchPage),
+            confirmButtonText: '确定',
+          });
+        }
       }
     },
 

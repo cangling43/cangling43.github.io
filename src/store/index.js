@@ -6,6 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    activeName: 'Home',// 导航栏激活名称
+
     tchNav: [
       {
         i:"el-icon-s-home",
@@ -31,12 +33,12 @@ export default new Vuex.Store({
         path:"/main/topic",
         name:"Topic"
       },
-      {
-        i:"el-icon-document-checked",
-        title:"审批试卷",
-        path:"/main/myCheckTest",
-        name:"MyCheckTest"
-      },
+      // {
+      //   i:"el-icon-document-checked",
+      //   title:"审批试卷",
+      //   path:"/main/myCheckTest",
+      //   name:"MyCheckTest"
+      // },
       {
         i:"el-icon-message",
         title:"我的消息",
@@ -105,6 +107,10 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    setActiveName(state,data){
+      state.activeName = data
+    },
+
     setUserName(state,data){
       state.userName = data
     },

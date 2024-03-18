@@ -15,6 +15,7 @@ export const routes = [
         title:'注册'
       },
     },
+    
     {
       path: '/main',
       name: 'Main',

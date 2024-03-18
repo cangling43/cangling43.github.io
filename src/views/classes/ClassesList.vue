@@ -21,7 +21,8 @@
         </div>
         <div class="info">
           <div class="info-row">
-            <div class="info-item">加入时间 : {{item.enterDate}}</div>
+            <div v-if="$role('student')" class="info-item">加入时间 : {{item.enterDate}}</div>
+            <div v-else class="info-item">创建时间 : {{item.createDate}}</div>
             <div class="info-item">班级人数 : {{item.peopleNum}} 人</div>
           </div>
           <div class="info-row">
@@ -179,6 +180,6 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 
 </style>

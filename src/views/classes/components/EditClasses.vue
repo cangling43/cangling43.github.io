@@ -80,5 +80,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
+.el-dialog__body {
+  text-align: left;
+}
 </style>

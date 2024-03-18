@@ -1,24 +1,26 @@
 <template>
-    <div class="content-bg">
-        <div class="tab-title" >
-            <div class="tabTitle-item active">我的题库</div>
-        </div>
-        <div class="tab-item">
-            
+    <TopTab title="题库">
+			<div class="topic">
+			<strong>功能开发中,敬请期待</strong>
 
-
-        </div>
-    </div>
+			</div>
+		</TopTab>
 </template>
 
 <script>
-import "../../assets/less/my_tab.less"
+import TopTab from "../../components/TopTab.vue";
 
 export default {
-    name:"Topic"
-}
+  name: "Topic",
+	components: {
+    TopTab,
+  },
+};
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="less" scoped>
+.topic{
+	padding: 48px;
+	text-align: center;
+}
 </style>

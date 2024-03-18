@@ -19,7 +19,7 @@ Vue.prototype.$role = role;
 Vue.prototype.$api = api;
 
 //全局前置守卫 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if(to.name=="Login"||to.name=="Register"){
     next()
 
@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
       
     }else{
       //获得权限
-      store.dispatch('getRole')
+      await store.dispatch('getRole')
       next();
     }
   }

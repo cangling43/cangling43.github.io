@@ -9,23 +9,26 @@
           <li class="test-info">出卷者: {{ testData.creatorName }}</li>
           <li class="test-info">
             答题时间:
-            <el-input-number v-model="testData.time" controls-position="right" :step="10" size="mini" :min="1"></el-input-number>
+            <el-input-number v-model="testData.time" controls-position="right" :step="10" size="mini" :min="1" />
             分钟
           </li>
           <li class="test-info">题目数量: 共 {{ topicNavIndex_mixin(4,sortedTopics[4].topic_content.length-1) }} 道</li>
           <li class="test-info">总分: {{ totalScore }} 分</li>
           <li class="test-info">
             及格分数:
-            <el-input-number v-model="testData.passMark" controls-position="right" :step="1" size="mini" :min="0" :max="totalScore"></el-input-number>
+            <el-input-number v-model="testData.passMark" controls-position="right" :step="1" size="mini" :min="0" :max="totalScore" />
             分
           </li>
           <!-- <li class="test-info">所属班级: {{ testData.classes_name }}</li> -->
           <li style="clear:both;"></li>
         </ul>
         <ul>
-          <!-- <li class="test-info">重复考试的次数:
-            <el-input-number v-model="testData.repeatTest" controls-position="right" :step="1" size="mini" :min="1"></el-input-number>
-          </li> -->
+          <li class="test-info">允许学生切换页面次数:
+            <el-input-number v-model="testData.switchPage" controls-position="right" :step="1" size="mini" :min="-1" />
+            <el-tooltip class="item" effect="light" content="-1表示允许学生无限次切换页面" placement="bottom-start">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </li>
           <li class="test-info">是否允许复制文本:
             <el-switch v-model="testData.permitCopy" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
           </li>
@@ -142,27 +145,33 @@
                   </div>
 
                   <!-- 正确答案 -->
-                  <p class="correctAnswer" >
+                  <p class="correctAnswer">
                     <strong>正确答案: </strong>
                     {{ t.correctAnswer }}
                   </p>
-                  <div class="difficulty fl">
-                    <strong>难度: </strong>
-                    <span v-if="isEdit(s_topics.type,tIndex)">
-                      <el-select v-model="t.difficulty" placeholder="请选择" size="mini">
-                        <el-option v-for="item in topicDifficultyOptions" :key="item" :label="item" :value="item">
-                        </el-option>
-                      </el-select>
-                    </span>
-                    <span v-else>{{t.difficulty}}</span>
-                  </div>
-                  <div class="topicScore fr">
-                    <strong>分值: </strong>
-                    <span v-if="isEdit(s_topics.type,tIndex)">
-                      <el-input size="mini" v-model="t.score"></el-input>
-                    </span>
-                    <span v-else>{{t.score}}</span>
-                    (分)
+                  <div>
+                    <div class="difficulty">
+                      <strong>难度: </strong>
+                      <span v-if="isEdit(s_topics.type,tIndex)">
+                        <el-select v-model="t.difficulty" placeholder="请选择" size="mini">
+                          <el-option v-for="item in topicDifficultyOptions" :key="item" :label="item" :value="item">
+                          </el-option>
+                        </el-select>
+                      </span>
+                      <span v-else>{{t.difficulty}}</span>
+                    </div>
+                    <div class="topicScore">
+                      <strong>分值: </strong>
+                      <span v-if="isEdit(s_topics.type,tIndex)">
+                        <el-input-number v-model="t.score" controls-position="right" :step="1" size="mini" :min="0"/>
+                      </span>
+                      <span v-else>{{t.score}}</span>
+                      (分)
+                    </div>
+                    <div class="required">
+                      <strong>是否必填: </strong>
+                      <el-switch v-model="t.required" active-color="#409EFF" inactive-color="#ccc"> </el-switch>
+                    </div>
                   </div>
                   <div class="analysis">
                     <strong>题目解析: </strong>
@@ -255,8 +264,9 @@ export default {
         autoMack: 1, //是否自动评分
         permitCopy: 1, //是否允许复制文本
         repeatTest: 1, //用户可重复考试次数
+        switchPage: -1,
         disruptOrder: 0, //是否打乱题目顺序
-        creatorName: this.$store.state.userName
+        creatorName: this.$store.state.userName,
       },
 
       //用户数据
@@ -282,7 +292,7 @@ export default {
 
   computed: {
     params() {
-      return this.$route.params
+      return this.$route.params;
     },
     //试卷总分
     totalScore() {
@@ -308,13 +318,11 @@ export default {
 
   created() {
     let type = this.$route.params.type;
-    if(type === "add"){
-
+    if (type === "add") {
     }
-    if(type === "edit"){
+    if (type === "edit") {
       this.getTestPaper();
     }
-    
   },
 
   mounted() {
@@ -324,14 +332,15 @@ export default {
 
   methods: {
     // 复制试卷
-    copy(){
-      this.testData.examName = '点击编辑试卷名称'
+    copy() {
+      this.testData.examName = "点击编辑试卷名称";
       this.$router.push({
-        name: 'createExam',
-        params: {type: 'add', data: this.testData}
-      })
-      this.$message.success('复制成功');
+        name: "createExam",
+        params: { type: "add", data: this.testData },
+      });
+      this.$message.success("复制成功");
     },
+
     //提交试卷
     submit() {
       /*  处理题目信息 */
@@ -353,19 +362,27 @@ export default {
           choice += c + "\n";
         });
         item.choice = choice.slice(0, -1);
+        item.required = item.required === true ? 1:0
       });
 
       //处理正确答案
-      topicData.forEach((item) => {
+      for(let item of topicData) {
+        if(!item.correctAnswer){
+          this.$message.warning("有题目未选答案");
+          return
+        }
         if (item.correctAnswer instanceof Array) {
+          if(item.correctAnswer.length === 1 && item.correctAnswer[0] === ''){
+          this.$message.warning("有题目未选答案");
+          return
+        }
           var correctAnswer = "";
           item.correctAnswer.forEach((c) => {
             correctAnswer += c + "\n";
           });
           item.correctAnswer = correctAnswer.slice(0, -1);
         }
-        console.log(item);
-      });
+      };
 
       //处理试卷信息
       var testData = JSON.parse(JSON.stringify(this.testData));
@@ -382,74 +399,73 @@ export default {
         ...testData,
       };
 
-      if (this.params.type === 'edit') {
+      if (this.params.type === "edit") {
         var url = "/updateTestPaper";
       } else {
         var url = "/createTestPaper";
       }
       console.log(request);
-      this.$http.post(url,request).then(res =>{
+      this.$http.post(url, request).then((res) => {
         if (res.code == 200) {
           this.$message.success(res.msg);
           if (url == "/createTestPaper") {
             this.$router.push("/testPaperTch/" + res.data.examId);
           }
         }
-      })
+      });
     },
 
     //编辑试卷---获取试卷信息
     async getTestPaper() {
       let params = {
         examId: this.$route.params.tp_id,
-      }
-      await this.$http.get('/getTestPaperByTp_id',{params}).then(res =>{
+      };
+      await this.$http.get("/getTestPaperByTp_id", { params }).then((res) => {
         // this.testData = res.data
-          console.log("result.data ==> ", res);
+        console.log("result.data ==> ", res);
 
-          if (res.code == 200) {
-            var testData = res.data;
-          } else {
-            return;
+        if (res.code == 200) {
+          var testData = res.data;
+        } else {
+          return;
+        }
+
+        //处理试卷的题目数据
+        testData.topicTchDTOList.forEach((item) => {
+          if (item.topicType == 4 || item.topicType == 3 || item.topicType == 1) {
+            item.correctAnswer = item.correctAnswer.split(/[\n]/g);
           }
+          //按换行符分割字符串
+          item.choice = item.choice.split(/[\n]/g);
+          item.required = item.required === 1 ? true : false;
+        });
+        testData.autoMack = testData.autoMack == 1 ? true : false;
+        testData.disruptOrder = testData.disruptOrder == 1 ? true : false;
+        testData.permitCopy = testData.permitCopy == 1 ? true : false;
 
-          //处理试卷的题目数据
-          testData.topicTchDTOList.forEach((item) => {
-            if (item.topicType == 4 || item.topicType == 3) {
-              item.correctAnswer = item.correctAnswer.split(/[\n]/g);
-            }
-            //按换行符分割字符串
-            item.choice = item.choice.split(/[\n]/g);
-          });
-          testData.autoMack = testData.autoMack == 1 ? true : false;
-          testData.disruptOrder = testData.disruptOrder == 1 ? true : false;
-          testData.permitCopy = testData.permitCopy == 1 ? true : false;
+        this.testData = testData;
+        console.log("testData ==> ", this.testData);
 
-          this.testData = testData;
-          console.log("testData ==> ", this.testData);
-
-          //按题目类型分类并保存
-          var topics = this.testData.topicTchDTOList;
-          for (let i = 0; i < topics.length; i++) {
-            for (let item of this.sortedTopics) {
-          //     // console.log(topics[i].topicType,item.type);
-              if (topics[i].topicType == item.type) {
-                item.topic_content.push(topics[i]);
-              }
+        //按题目类型分类并保存
+        var topics = this.testData.topicTchDTOList;
+        for (let i = 0; i < topics.length; i++) {
+          for (let item of this.sortedTopics) {
+            //     // console.log(topics[i].topicType,item.type);
+            if (topics[i].topicType == item.type) {
+              item.topic_content.push(topics[i]);
             }
           }
-          console.log(this.sortedTopics);
-      })
+        }
+        console.log(this.sortedTopics);
+      });
     },
 
-
-
     //统一设置题目分数
-    setAllScore(val , type){
-      val = parseInt(val)
-      this.sortedTopics[type].topic_content.forEach(item =>{
+    setAllScore(val, type) {
+      val = parseInt(val);
+      this.sortedTopics[type].topic_content.forEach((item) => {
         item.score = val;
-      })
+      });
     },
 
     //设置当前编辑中的题目
@@ -512,6 +528,7 @@ export default {
         difficulty: "中等",
         score: 10,
         subjectId: "1",
+        required: true
       });
 
       var time = setTimeout(() => {

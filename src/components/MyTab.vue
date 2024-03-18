@@ -17,11 +17,11 @@
 
     <!-- 加入班级弹框 -->
     <div class="dialog">
-      <el-dialog title="确定加入该班级" :visible.sync="dialogVisible" width="30%">
-        <p>班级编号 : {{enterClassesData.classesId}}</p>
+      <el-dialog title="确定加入该班级?" :visible.sync="dialogVisible" width="30%">
+        <p>班级编号 : C{{enterClassesData.classesId}}</p>
         <p>班级名称 : {{enterClassesData.classesName}}</p>
         <p>创 建 者 : {{enterClassesData.creatorName}}</p>
-        <p>加入方式 : {{enterClassesData.joinway}}</p>
+        <p>加入方式 : {{enterClassesData.joinway | joinTayType}}</p>
         <p>创建时间 : {{enterClassesData.createDate}}</p>
         <p>班级人数 : {{enterClassesData.peopleNum}}</p>
         <p>班级简介 : {{enterClassesData.introduction}}</p>
@@ -178,10 +178,10 @@ export default {
     //获取班级信息
     joinClasses() {
       var reg = /^[0-9]{1,10}$/;
-      var id = this.enterClasses_id;
+      var id = this.enterClasses_id.replace('C' ,'');
       if (reg.test(id)) {
         let params = {
-          classesId: this.enterClasses_id
+          classesId: id
         }
         this.$http.get('/queryClasses',{params}).then(res =>{
           this.enterClassesData = res.data;
@@ -196,11 +196,13 @@ export default {
       this.dialogVisible = false;
 
       var params = {
-        c_id: this.enterClasses_id,
+        c_id: this.enterClasses_id.replace('C' ,''),
       };
       this.$http.get("/joinClasses",{params}).then(res =>{
         if(res.code == 200){
-          this.$message.success("加入成功!");
+          if(this.enterClassesData.joinway === "all") this.$message.success("加入成功!");
+          console.log(this.enterClassesData);
+          if(this.enterClassesData.joinway === "apply") this.$message.success("申请成功!");
           this.reload()
         }
       })

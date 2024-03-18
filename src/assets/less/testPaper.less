@@ -183,6 +183,10 @@ html {
         height: 10px;
     }
 
+    .required-symbol{
+        color: red;
+    }
+
     .question {
         margin-bottom: 20px;
         font-size: 16px;
@@ -225,18 +229,23 @@ html {
         margin-left: 12px;
     }
 
+    .correctAnswer{
+        padding-left: 12px;
+    }
+
     .topicScore,
-    .difficulty {
+    .difficulty,
+    .required {
+        display: inline-block;
         box-sizing: border-box;
-        width: 50%;
-        padding: 0 10px;
+        width: 33%;
+        padding: 0 12px;
         margin-bottom: 10px;
         font-size: 14px;
     }
 
-    .topicScore .el-input,
     .difficulty .el-input {
-        width: 200px;
+        width: 120px;
     }
 
     .analysis,

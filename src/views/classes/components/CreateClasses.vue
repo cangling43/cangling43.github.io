@@ -28,9 +28,6 @@ import { mapState } from 'vuex';
 
 export default {
   name: "CreateClasses",
-    computed: {
-    ...mapState(['joinWayType'])
-  },
   data(){
     var checkName = (rule, value, callback) => {
       var reg = /^[\u4e00-\u9fa5\w]{1,16}$/;
@@ -52,6 +49,9 @@ export default {
         name: [{ validator: checkName, trigger: "change" }],
       },
     }
+  },
+  computed: {
+    ...mapState(['joinWayType'])
   },
   methods: {
     //创建班级
@@ -81,10 +81,13 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .el-textarea .el-input__count{
   bottom: 0px;
   right: 21px;
   background: unset;
+}
+.el-dialog__body {
+  text-align: left;
 }
 </style>

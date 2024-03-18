@@ -3,9 +3,8 @@
     <!-- 选择考试时间 -->
     <el-date-picker v-model="releaseTestDate" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
     </el-date-picker>
-    <el-switch v-model="updateRelease.publishAnswer" active-text="公布答案" :active-value="1" inactive-text="不公布答案" :inactive-value="0"/>
-    <el-switch v-model="updateRelease.publishScore" active-text="公布分数" :active-value="1" inactive-text="不公布分数" :inactive-value="0"/>
-    
+    <el-switch v-model="updateRelease.publishAnswer" active-text="公布答案" :active-value="1" inactive-text="不公布答案" :inactive-value="0" />
+    <el-switch v-model="updateRelease.publishScore" active-text="公布分数" :active-value="1" inactive-text="不公布分数" :inactive-value="0" />
 
     <span slot="footer" class="dialog-footer">
       <el-button size="medium" @click="dialog=false"> 取消 </el-button>
@@ -15,26 +14,26 @@
 </template>
 
 <script>
-import {getFormatDate} from '@/utils/common.js';
+import { getFormatDate } from "@/utils/common.js";
 
 export default {
   name: "ReleaseUpdate",
-  data(){
-    return{
-      classesId: '',
-      examId: '',
+  data() {
+    return {
+      classesId: "",
+      examId: "",
       dialog: false,
       releaseTestDate: [],
-      updateRelease: {}
-    }
+      updateRelease: {},
+    };
   },
   methods: {
     //更改考试时间弹框
-    changeTestDate(val,classesId) {
+    changeTestDate(val, classesId) {
       this.dialog = true;
       this.updateRelease = val;
-      this.classesId = classesId
-      this.releaseTestDate = [val.startDate,val.deadline]
+      this.classesId = classesId;
+      this.releaseTestDate = [val.startDate, val.deadline];
       console.log(val);
     },
 
@@ -52,19 +51,31 @@ export default {
         startDate: start_date,
         deadline,
         publishScore: this.updateRelease.publishScore,
-        publishAnswer: this.updateRelease.publishAnswer
+        publishAnswer: this.updateRelease.publishAnswer,
       };
-      this.$http.post('/updateReleaseTest',request).then(res =>{
-          if (res.code == 200) {
-            this.$emit('success')
-            this.dialog = false;
-            this.$message.success("更改成功");
-          }
-      })
+      this.$http.post("/updateReleaseTest", request).then((res) => {
+        if (res.code == 200) {
+          this.$emit("success");
+          this.dialog = false;
+          this.$message.success("更改成功");
+        }
+      });
     },
-  }
+  },
 };
 </script>
 
-<style>
+<style lang="less" scoped>
+.el-dialog__body {
+  padding: 0 12px;
+  text-align: center;
+
+  // .el-range-editor.el-input__inner{
+  //   display: block;
+  // }
+  .el-switch {
+    display: block;
+    margin: 24px 0;
+  }
+}
 </style>

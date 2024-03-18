@@ -17,7 +17,7 @@
             <li class="item"> <span class="key">考试时间：</span>{{ releaseInfo.startDate + ' 至 ' + releaseInfo.deadline }} </li>
             <li class="item"> <span class="key">公布答案：</span>{{ releaseInfo.publishAnswer ? '是':'否' }} </li>
             <li class="item"> <span class="key">公布分数：</span>{{ releaseInfo.publishScore ? '是':'否' }}</li>
-            <li class="item"> <span class="key">公布分数：</span>{{ releaseInfo.passMark }}</li>
+            <li class="item"> <span class="key">及格分数：</span>{{ releaseInfo.passMark }}</li>
           </ul>
           <ul>
             <li class="item"> <span class="key">试卷提交情况：</span>{{ commitNumber }} / {{ userGradeList.length }}</li>
@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <!-- 其他班级成员考试情况表格 -->
+    <!-- 班级成员考试情况表格 -->
     <div class="user_list table">
       <el-table :data="userGradeList" style="width: 100%" v-loading="loading">
         <el-table-column label="用户id">
@@ -229,7 +229,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .testSituation {
   padding: 24px;
 

@@ -336,7 +336,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .classesSpace {
   padding: 10px 20px;
 

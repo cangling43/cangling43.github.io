@@ -266,7 +266,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" >
 .releaseTest{
   .el-dialog .pagination{
     text-align: center;
