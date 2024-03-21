@@ -3,7 +3,7 @@ import ElementUI from 'element-ui';
 import router from '../router'
 import Vue from 'vue'
 
-const baseURL = 'http://60.205.137.48:32857'
+const baseURL = 'http://localhost:8761'
 Vue.prototype.$imageBaseUrl = baseURL+'/images/';
 Vue.prototype.$baseURL = baseURL;
 
@@ -14,8 +14,6 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    // 上传文件时，config.data的数据类型是FormData，
-    // qs.stringify(FormData)的结果是空字符串，导致接口报**参数为空**的错误
     if (config.method === 'post' && config.data.constructor !== FormData) {
       config.headers['Content-Type'] = "application/json";
       config.data = JSON.stringify(config.data)
@@ -27,10 +25,11 @@ service.interceptors.request.use(
     config.headers['token'] = localStorage.getItem('_token');
 
     console.log(config);
-    return config
+    return config;
   },
   error => {
-    Promise.reject(error)
+    // 确保在请求拦截器中返回一个 rejected promise
+    return Promise.reject(error);
   }
 )
 
@@ -38,26 +37,23 @@ service.interceptors.response.use(
   response => {
     const res = response.data;
     console.log(res);
-    //请求成功
-    if(res.code == 200){
+    if (res && res.code === 200) {
       return res;
     }
 
-    //token认证失败,重新登录
-    if(res.code==300){
+    if (res && res.code === 300) {
       router.push("/Login")
       ElementUI.Message("登录已失效,请重新登录")
-    }else{
-      // 其他报错
+    } else {
       ElementUI.Message(res.msg)
     }
-    return res;
-    
+    return Promise.reject(res);
   },
   error => {
-    let data = error.response.data
-    return Promise.reject(data)
+    let data = error.response.data;
+    return Promise.reject(data);
   }
 )
+
 
 export default service
