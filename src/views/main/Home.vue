@@ -7,7 +7,6 @@
           <template v-if="$role('student')">
             <li @click="myClasses">我的班级</li>
             <li @click="finishTest">我参加过的考试</li>
-            <li>功能开发中,敬请期待</li>
           </template>
           <template v-if="$role('teacher')">
             <li @click="createClasses">创建班级</li>

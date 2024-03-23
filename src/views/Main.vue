@@ -119,7 +119,8 @@ export default {
           })
           this.reload()
         }
-      })
+      }),
+      location.reload();
     },
    
     //退出登录

@@ -2,7 +2,7 @@
   <div class="login register">
 
     <div class="info-left">
-      <img src="../assets/images/login-image3.png" alt="操场">
+      <img draggable="false" src="../assets/images/login-image3.png" alt="操场">
     </div>
 
     <div class="info">

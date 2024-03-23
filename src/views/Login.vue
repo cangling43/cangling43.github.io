@@ -2,7 +2,7 @@
   <div class="login">
 
     <div class="info-left">
-      <img src="../assets/images/login-image3.png" alt="操场">
+      <img draggable="false" src="../assets/images/login-image3.png" alt="操场">
     </div>
 
 
@@ -22,8 +22,8 @@
         <el-button type="primary" class="login-but" @click="login('loginForm')">登录</el-button>
         <el-button type="primary" class="register-but1" @click="goRouter('register')">注册</el-button>
 
-        <img class="login-image1" src="../assets/images/login-image1.png" alt="学习1">
-        <img class="login-image2" src="../assets/images/login-image2.png" alt="学习2">
+        <img draggable="false" class="login-image1" src="../assets/images/login-image1.png" alt="学习1">
+        <img draggable="false" class="login-image2" src="../assets/images/login-image2.png" alt="学习2">
       </el-form>
     </div>
   </div>
