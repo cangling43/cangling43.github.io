@@ -34,8 +34,6 @@ export default {
 #app {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
   font-family: Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
-
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
