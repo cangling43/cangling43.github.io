@@ -49,6 +49,7 @@
 import "../assets/font/iconfont.css"
 import "../assets/less/main.less"
 import defaultSrc from '../assets/images/defaultPhoto.png'
+import ElementUI from 'element-ui';
 import { mapState, mapMutations } from 'vuex';
 
 export default {
@@ -125,7 +126,7 @@ export default {
     loginOut(){
       localStorage.removeItem("_token")
       sessionStorage.removeItem("openClassesSpace")
-
+      ElementUI.Message.success("退出成功!")
       this.$router.push({name:"Login"})
     },
 

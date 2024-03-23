@@ -1,33 +1,46 @@
-#app{
-    background: url(../images/gangbi-008.jpg);
-    background-position: center;
-    background-repeat:no-repeat;
-    background-size: cover;
-
+#app {
+    // background: url(../images/gangbi-008.jpg);
+    // background-position: center;
+    // background-repeat:no-repeat;
+    // background-size: cover;
+    background-color: skyblue;
 }
-.login{
+
+.login {
     display: flex;
-    justify-content: center;
+    justify-content: right;
+    margin-right: 10%;
     align-items: center;
     height: 100%;
 }
+
+.info-left {
+    height: 500px;
+    width: 640px;
+    background-color: white;
+    img{
+        height: 500px;
+        width: 640px;
+    }
+}
+
 .login .info {
-    width: 570px;
-    height: 355px;
-    border:1px solid #ccc;
+    width: 450px;
+    height: 501px;
+    border: 1px solid #ccc;
     padding: 0px 50px 10px;
     box-sizing: border-box;
-    background: rgba(238, 238, 238, 0.7);
-    
+    background: white;
 
 
-    p{
+
+    p {
         font-size: 26px;
         margin-bottom: 26px;
-        margin-left: 22px;
+        margin-left: 38%;
         color: #333;
 
-        span{
+        span {
             float: right;
             margin: 4px;
             font-size: 16px;
@@ -35,16 +48,13 @@
             text-decoration: underline;
         }
     }
-    .el-form-item__label{
+
+    .el-form-item__label {
         color: #333;
     }
-    .el-input__inner{
-        background-color: #f7f7f7;
-    }
-    .el-input__inner:focus{
-        border: 1px solid #666;
-    }
-    .forget-password{
+
+
+    .forget-password {
         position: relative;
         top: -10px;
         right: 10px;
@@ -53,22 +63,44 @@
         color: #333;
         cursor: pointer;
     }
-    .forget-password:hover{
-        color: #000;
+
+    .forget-password:hover {
+        color: #333;
         text-decoration: underline;
     }
-    .login-but ,.register-but{
-        width: 290px;
-        margin:40px auto 0px;
-        background: #444;
-        color: #fff;
-        text-align: center;
-        padding: 10px 0;
-        border-radius: 4px;
-        cursor: pointer;
+
+    .login-but {
+        width: 120px;
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 30px;
     }
-    .register-but {
-        margin-top: 16px;
-        margin-bottom: 16px;
+
+    .register-but1 {
+        width: 120px;
+        position: absolute;
+        margin-top: 30px;
+        margin-left: 200px;
     }
+
+    .register-but2{
+        width: 120px;
+        margin-left: 130px;
+        margin-top: 15px;
+    }
+
+    .login-image1 {
+        height: 170px;
+        width: 170px;
+        margin-left: 190px;
+        margin-top: 80px;
+    }
+
+    .login-image2 {
+        position: absolute;
+        height: 170px;
+        width: 170px;
+        margin-top: -170px;
+    }
+
 }

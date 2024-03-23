@@ -1,5 +1,10 @@
 <template>
   <div class="login register">
+
+    <div class="info-left">
+      <img src="../assets/images/login-image3.png" alt="操场">
+    </div>
+
     <div class="info">
       <p>注册账号<span @click="goRouter('login')">返回</span></p>
       <el-form
@@ -31,7 +36,7 @@
 
 
 
-        <div class="register-but" @click="register('registerForm')">注册</div>
+        <el-button type="primary" class="register-but2" @click="register('registerForm')">注册</el-button>
 
       </el-form>
     </div>
@@ -157,6 +162,6 @@ export default {
 
 <style lang="less" scoped>
 .register .info{
-  height: 480px;
+  height: 501px;
 }
 </style>

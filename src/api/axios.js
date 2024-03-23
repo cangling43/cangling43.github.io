@@ -3,8 +3,9 @@ import ElementUI from 'element-ui';
 import router from '../router'
 import Vue from 'vue'
 
-const baseURL = 'http://localhost:8761'
-Vue.prototype.$imageBaseUrl = baseURL+'/images/';
+const baseURL = 'https://60.205.137.48:27211'
+// const baseURL = 'http://localhost:8761'
+Vue.prototype.$imageBaseUrl = baseURL + '/images/';
 Vue.prototype.$baseURL = baseURL;
 
 const service = axios.create({
@@ -36,16 +37,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data;
-    console.log(res);
     if (res && res.code === 200) {
       return res;
     }
 
     if (res && res.code === 300) {
+      ElementUI.Message.error("登录已失效,请重新登录!")
       router.push("/Login")
-      ElementUI.Message("登录已失效,请重新登录")
     } else {
-      ElementUI.Message(res.msg)
+      ElementUI.Message.error(res.msg)
     }
     return Promise.reject(res);
   },
