@@ -12,8 +12,7 @@
         </div>
         <div class="name">{{$store.state.userName}}</div>
         <div class="dropdown" >
-          <div class="item">个人中心</div>
-          <div class="item">我的消息</div>
+          <div class="item" @click="me">个人中心</div>
           <div class="item" @click="loginOut">退出登录</div>
         </div>
       </div>
@@ -104,6 +103,14 @@ export default {
       this.setActiveName(name)
       this.$router.push(path)
 
+    },
+
+    // 个人中心
+    me() {
+      this.$router.push({
+        name: "Me",
+      });
+      this.setActiveName("Me");
     },
 
     //退出登录
