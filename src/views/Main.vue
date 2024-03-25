@@ -1,7 +1,9 @@
 <template>
   <div class="main">
     <div class="header">
-      <div class="logo" @click="goRouter('/main/home','Home')">考试汇</div>
+      <div class="logo" @click="goRouter('/main/home','Home')">
+        <img class="main-image" src="../assets/images/mian-image.png" alt="考试">
+        快乐屋</div>
       <div class="person" >
         <div class="img">
           <template>

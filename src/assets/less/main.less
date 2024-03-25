@@ -1,22 +1,19 @@
-@baseColor: #336699;
+@baseColor: white;
 
 .header {
     position: relative;
-    height: 50px;
-    line-height: 50px;
+    height: 70px;
+    line-height: 70px;
     background: @baseColor;
     color: #fff;
 
     .logo{
         float: left;
-        margin:0 50px;
+        margin:0 70px;
         font-size: 28px;
-        font-family:"FZShuTi","SimSun", " Microsoft YaHei";
+        color: #409EFF;
         cursor: pointer;
         transition: 0.3s;
-    }
-    .logo:hover{
-        color: #111;
     }
     .person{
         float: right;
@@ -40,10 +37,11 @@
             object-fit: cover;
         }
         .name{
-            height: 50px;
+            height: 70px;
             float: right;
-            font-size: 18px;
+            font-size: 21px;
             letter-spacing: 2px;
+            color: #001133;
         }
     }
     .person:hover .dropdown{
@@ -58,12 +56,12 @@
         text-align: center;
         line-height: 48px;
         font-size: 16px;
-        background: #336699;
+        background: #409EFF;
         z-index: 999;
         cursor: pointer;
         
         .item:hover{
-            background: #29527c;
+            background: #409EFF;
         }
     }
     
@@ -116,11 +114,11 @@
         }
     }
     .menu-item:hover{
-        background: #29527c;
+        background: #409EFF;
         color: #f7f7f7;
     }
     .menu-item.active{
-        background: #29527c;
+        background: #409EFF;
         color: #f7f7f7;
         
         // background: #272727;
@@ -202,4 +200,11 @@
 
 }
 
+.main-image{
+    height: 45px;
+    width: 45px;
+    position: absolute;
+    left: 15px;
+    top: 10px;
+}
 

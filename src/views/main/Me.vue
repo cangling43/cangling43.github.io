@@ -89,9 +89,9 @@ export default {
       if(res.data.photo){
         this.fileList = [{
           name: res.data.photoName,
-          url: this.$imageBaseUrl + res.data.photo
+          url: res.data.photo
         }]
-        this.imageUrl = this.$imageBaseUrl + res.data.photo
+        this.imageUrl =res.data.photo
       }
     },
     //上传成功
