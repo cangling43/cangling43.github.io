@@ -37,8 +37,8 @@ export default {
   data() {
     return {
       form: {
-        name: '762489117@qq.com',
-        password:'admin',
+        name: '',
+        password:'',
       },
       rules:{
           name:[

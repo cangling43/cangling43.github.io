@@ -2,12 +2,12 @@
   <div class="uploadPhoto">
     <div class="title">上传头像 :</div>
     <el-upload 
-				action="http://localhost:8082/upload" 
+				action="http://localhost:8000/upload" 
 				:headers="{ token }"
 				:file-list="fileList"
 				:limit="1"
 				:show-file-list="true" 
-        :auto-upload="autoUpload"
+        		:auto-upload="autoUpload"
 				:on-exceed="handleAvatarExceed"
 				:on-change="handleAvatarChange"
 				:on-remove="handleAvatarRemove"
