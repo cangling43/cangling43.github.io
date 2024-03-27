@@ -81,7 +81,7 @@ export default {
 
       // 分页
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 9,
       total: null,
 
       keyword: '',

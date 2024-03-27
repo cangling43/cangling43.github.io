@@ -31,7 +31,7 @@
         </el-form-item>
 
         <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="可不填"></el-input>
+          <el-input v-model="form.phone" placeholder="请输入手机号码"></el-input>
         </el-form-item>
 
 
@@ -114,13 +114,14 @@ export default {
               { required: true, message: '请再次输入密码', trigger: 'blur' },
               { validator: checkPassword2, trigger: 'blur' },
           ],
-          phone:[
-              { validator: checkPhone, trigger: 'blur' },
+        phone: [
+              {required: true, message: '请输入手机号码', trigger: 'blur'},
+              { validator: checkPhone, trigger: 'blur' }
           ],
           email:[
               { required: true, message: '请输入邮箱地址', trigger: 'blur' },
               { validator: checkEmail, trigger: 'blur' },
-          ]
+        ],
       },
         
     };

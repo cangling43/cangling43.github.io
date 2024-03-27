@@ -6,7 +6,8 @@
     <div class="tab-item">
 			<div class="uploadPhoto">
 				<div class="title">上传头像 :</div>
-				<el-upload class="avatar-uploader" 
+        <!-- 把可以上传的代码注释,后边可以再修改 -->
+				<!-- <el-upload class="avatar-uploader" 
 				:action="actionURL" 
 				:headers="{ token }"
 				:file-list="fileList"
@@ -20,7 +21,14 @@
 				:before-upload="beforeAvatarUpload">
 					<img v-if="imageUrl" :src="imageUrl" class="avatar">
 					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-				</el-upload>
+				</el-upload> -->
+
+        <!-- 只是显示头像 -->
+        <div class="avatar-uploader" 
+				>
+					<img v-if="imageUrl" :src="imageUrl" class="avatar">
+					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+				</div>
 			</div>
       <div class="userInfo">
         <div class="item">
