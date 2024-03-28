@@ -2,18 +2,12 @@
   <div class="login register">
 
     <div class="info-left">
-      <img draggable="false" src="../assets/images/login-image3.png" alt="操场">
+      <img draggable="false" src="../assets/images/login-image3.webp" alt="操场">
     </div>
 
     <div class="info">
       <p>注册账号<span @click="goRouter('login')">返回</span></p>
-      <el-form
-        :model="form"
-        status-icon
-        :rules="rules"
-        label-width="auto"
-        ref="registerForm"
-      >
+      <el-form :model="form" status-icon :rules="rules" label-width="auto" ref="registerForm">
         <el-form-item label="用户名" prop="name">
           <el-input v-model="form.name" placeholder="请输入您的用户名"></el-input>
         </el-form-item>
@@ -23,11 +17,11 @@
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input type="password"  v-model="form.password" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
         </el-form-item>
 
         <el-form-item label="确认密码" prop="checkPass">
-          <el-input type="password"  v-model="form.checkPass" placeholder="请再次输入密码"></el-input>
+          <el-input type="password" v-model="form.checkPass" placeholder="请再次输入密码"></el-input>
         </el-form-item>
 
         <el-form-item label="手机号码" prop="phone">
@@ -48,113 +42,114 @@ import "../assets/less/login.less"
 export default {
   name: "Register",
   data() {
-       var checkName = (rule, value, callback) => { 
-            var reg = /^[\u4e00-\u9fa5\w]{3,16}$/;
-            if(!reg.test(value)){
-                callback(new Error('用户名只能是3-16位汉字、字母、数字、下划线'));
-            }else{
-                callback()
-            }
-        };
-        var checkPassword = (rule, value, callback) => { 
-            var reg = /^\w{6,16}$/;
-            if(!reg.test(value)){
-                callback(new Error('用户名只能是6-16位字母、数字、下划线'));
-            }else{
-                callback()
-            }
-        };
-        var checkPassword2 = (rule, value, callback) => { 
-            if(value!=this.form.password){
-                callback(new Error('两次输入密码不一致!'));
-            }else{
-                callback()
-            }
-        };
-        var checkPhone = (rule, value, callback) => { 
-            if(value==""){
-                callback()
-            }
-            var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
-            if(!reg.test(value)){
-                callback(new Error('请输入正确的手机号码'));
-            }else{
-                callback()
-            }
-        };
-        var checkEmail = (rule, value, callback) => { 
-            if(value==""){
-                callback()
-            }
-            var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            if(!reg.test(value)){
-                callback(new Error('请输入正确的邮箱地址'));
-            }else{
-                callback()
-            }
-        };
+    var checkName = (rule, value, callback) => {
+      var reg = /^[\u4e00-\u9fa5\w]{3,16}$/;
+      if (!reg.test(value)) {
+        callback(new Error('用户名只能是3-16位汉字、字母、数字、下划线'));
+      } else {
+        callback()
+      }
+    };
+    var checkPassword = (rule, value, callback) => {
+      var reg = /^\w{6,16}$/;
+      if (!reg.test(value)) {
+        callback(new Error('用户名只能是6-16位字母、数字、下划线'));
+      } else {
+        callback()
+      }
+    };
+    var checkPassword2 = (rule, value, callback) => {
+      if (value != this.form.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback()
+      }
+    };
+    var checkPhone = (rule, value, callback) => {
+      if (value == "") {
+        callback()
+      }
+      var reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的手机号码'));
+      } else {
+        callback()
+      }
+    };
+    var checkEmail = (rule, value, callback) => {
+      if (value == "") {
+        callback()
+      }
+      var reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的邮箱地址'));
+      } else {
+        callback()
+      }
+    };
     return {
       form: {
-          name: '',
-          password:'',
-          checkPass:'',
-          phone:'',
-          email:''
+        name: '',
+        password: '',
+        checkPass: '',
+        phone: '',
+        email: '',
+        sex: '男',
       },
-      rules:{
-          name:[
-              { required: true, message: '请输入您的用户名', trigger: 'blur' },
-              { validator: checkName, trigger: 'change' },
-          ],
-          password:[
-              { required: true, message: '请输入密码', trigger: 'blur' },
-              { validator: checkPassword, trigger: 'change' },
-          ],
-          checkPass:[
-              { required: true, message: '请再次输入密码', trigger: 'blur' },
-              { validator: checkPassword2, trigger: 'blur' },
-          ],
+      rules: {
+        name: [
+          { required: true, message: '请输入您的用户名', trigger: 'blur' },
+          { validator: checkName, trigger: 'change' },
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { validator: checkPassword, trigger: 'change' },
+        ],
+        checkPass: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
+          { validator: checkPassword2, trigger: 'blur' },
+        ],
         phone: [
-              {required: true, message: '请输入手机号码', trigger: 'blur'},
-              { validator: checkPhone, trigger: 'blur' }
-          ],
-          email:[
-              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-              { validator: checkEmail, trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' },
         ],
       },
-        
+
     };
   },
-  methods:{
+  methods: {
     //表单提交
-    register(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+    register(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
 
-            // 处理post请求参数
-            var request={
-                userName:this.form.name,
-                password:this.form.password,
-                email:this.form.email,
-                phone:this.form.phone,
-            }
-            this.$http.post('/register',request).then(res =>{
-              if(res.code == 200){
-                this.goRouter({name:"Login"})
-                this.$message.success("注册成功");
-              }
-            })
-            
-          } else {
-            console.log('error submit!!');
-            return false;
+          // 处理post请求参数
+          var request = {
+            userName: this.form.name,
+            password: this.form.password,
+            email: this.form.email,
+            phone: this.form.phone,
           }
-        });
+          this.$http.post('/register', request).then(res => {
+            if (res.code == 200) {
+              this.goRouter({ name: "Login" })
+              this.$message.success("注册成功");
+            }
+          })
+
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
 
     //路由跳转
-    goRouter(path){
+    goRouter(path) {
       this.$router.push(path)
     },
   }
@@ -162,7 +157,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.register .info{
+.register .info {
   height: 501px;
 }
 </style>

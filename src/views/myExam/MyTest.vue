@@ -190,7 +190,6 @@ export default {
   }
 
   .create {
-    background: #4788cc;
     color: #fff;
     border-color: #f6f6f6;
   }
@@ -206,7 +205,6 @@ export default {
     margin-right: 20px;
   }
   .query .el-button {
-    background: #4788cc;
     border-color: #4788cc;
     transition: 1s;
   }

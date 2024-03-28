@@ -153,8 +153,7 @@ export default {
     width: 320px;
     margin-right: 20px;
   }
-  .query .el-button {
-    background: #4788cc;
+  .query .el-button { 
     border-color: #4788cc;
     transition: 1s;
   }

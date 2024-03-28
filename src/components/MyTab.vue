@@ -8,7 +8,7 @@
     </div>
     <div class="classesNameInput">
       <el-input v-model="enterClasses_id" size="small" placeholder="请输入班级编号" ></el-input>
-      <el-button type="primary" size="small" @click="joinClasses()">申请加入</el-button>
+      <el-button type="success" size="small" @click="joinClasses()">申请加入</el-button>
     </div>
     <div class="tab-item">
       <router-view @openPaper="openPaper" />
