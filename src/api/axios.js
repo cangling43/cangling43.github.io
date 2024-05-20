@@ -3,8 +3,8 @@ import ElementUI from 'element-ui';
 import router from '../router'
 import Vue from 'vue'
 
-// const baseURL = 'http://60.205.137.48:8761'
-const baseURL = 'http://localhost:8761'
+const baseURL = 'http://120.55.62.255:8763'
+// const baseURL = 'http://localhost:8763'
 // (一定注意是http不是https)
 Vue.prototype.$imageBaseUrl = baseURL + '/images/';
 Vue.prototype.$baseURL = baseURL;

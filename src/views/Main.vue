@@ -13,6 +13,7 @@
         <div class="name">{{$store.state.userName}}</div>
         <div class="dropdown" >
           <div class="item" @click="me">个人中心</div>
+          <!-- <div class="item" @click="change">变更身份</div> -->
           <div class="item" @click="loginOut">退出登录</div>
         </div>
       </div>
